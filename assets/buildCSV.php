@@ -89,8 +89,6 @@ if ($handle) {
 
 }
 
-// chmod the file we're writing to
-chmod('dataset.csv', 0777);
 // get a new handler for writing the CSV
 $handle = fopen("dataset.csv", 'w');
 
@@ -103,6 +101,8 @@ foreach($values as $value) {
   $value = trim($value, " ");
   fwrite($handle, $value . '|');
 }
+// close our handle
+fclose($handle);
 
 
 
