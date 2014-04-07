@@ -17,6 +17,8 @@
  *
  * HORAY!
  *
+ * Additional note: dataset.csv must be chmod 777 in order to write to it.
+ *
  */
 
 
@@ -55,6 +57,8 @@ if ($handle) {
     foreach($bufferArray as $value) {
       // if it's not just a blank line
       if ($value != "\n" && $value != "\t" && $value != "\r" ) {
+        // remove the end line delimiters 'cause we don't need them
+        $value = str_replace('#&#', ' ', $value);
         // remove unnecessary whitespace
         $value = trim($value, " ");
         // remove any special characters
@@ -82,6 +86,19 @@ if ($handle) {
   // close our handle
   fclose($handle);
 
+}
+
+// get a new handler for writing the CSV
+$handle = fopen("dataset.csv", 'w');
+
+//write out headers
+foreach($headerArray as $header) {
+  fwrite($handle, $header . '|');
+}
+// write out values
+foreach($values as $value) {
+  $value = trim($value, " ");
+  fwrite($handle, $value . '|');
 }
 
 
