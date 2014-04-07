@@ -12,12 +12,15 @@
  * I also removed the line "(25 rows affected)"
  *
  * This should work for the entire dataset, given that the format
- * is the same.
+ * is the same. It should also be flexible enough that we can add additional columns
+ * and the script should still run!
+ *
+ * HORAY!
  *
  */
 
 
-
+// open our data file
 $handle = fopen('delimited.csv', 'r');
 $headers = '';
 $values = array();
@@ -28,47 +31,54 @@ if ($handle) {
     // note teh newline character (\n) in "ENDHEADERS"
     // if we find our "ENDHEADERS" line, we break from this loop
     if (strcmp($buffer, "ENDHEADERS\n") == 0) {
+      // stop processing since we are done with headers
       break;
     }
     // building a string of all the headers
     $headers .= $buffer;
   }
 
-  // create an array of our headers
+  // create an array of our headers. Allow _ in words.
   $headerArray = str_word_count($headers, 1, "_");
 
-//  var_dump($headerArray);
 
-
-
+  // continue processing after the headers
   while (($buffer = fgets($handle))  !== false) {
+    // ignore any lines that are just a new line character
     if ($buffer === "\n") {
       continue;
     }
-
+    // break our current line into elements in an array, delimited on $&
     $bufferArray = explode('$&', $buffer);
 
-
+    // go through each item in this line
     foreach($bufferArray as $value) {
+      // if it's not just a blank line
       if ($value != "\n" && $value != "\t" && $value != "\r" ) {
+        // remove unnecessary whitespace
         $value = trim($value, " ");
+        // remove any special characters
         $value = trim($value, "\x00..\x1F");
+        // if it's longer than 0 length
         if (strlen($value) > 0) {
+          // push it onto our values array
           $values[] = $value;
         }
       }
     }
 
   }
-
+  // loop through all our data
   for($i = 0; $i < count($values); $i++) {
-    if ($i % 14 == 0) {
+    // at the end of each record
+    if ($i % count($headerArray) == 0) {
+      // insert some padding
       echo "</br></br></br>";
     }
-    echo $headerArray[$i % 14] . ": " .$values[$i] . "</br>";
+    // output: column_name + : + value
+    echo $headerArray[$i % count($headerArray)] . ": " .$values[$i] . "</br>";
   }
 
-//  var_dump($values);
   // close our handle
   fclose($handle);
 
@@ -76,4 +86,3 @@ if ($handle) {
 
 
 
-?>
