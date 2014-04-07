@@ -3,10 +3,30 @@
 <head>
     <title></title>
     <script src="/libs/d3.v3.min.js"></script>
-    <script src="/js/script.js"></script>
 </head>
 <body>
 
 
+<script src="/js/script.js"></script>
 </body>
 </html>
+
+select top 25 ra, dec, from target
+
+    target Id
+    Target name
+    RA
+    DEC
+    approved exposure time
+    proposal id
+    proprosal title
+    type
+
+
+  targid
+  targname, ra, dec, approved_exposure_time, proposal_id, proposalTitle
+
+
+    //need proposal number via join
+
+    select top 25 t.targid, t.targname, t.ra, t.dec, t.approved_exposure_time,
