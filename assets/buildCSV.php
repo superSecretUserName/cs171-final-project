@@ -18,6 +18,7 @@
  * HORAY!
  *
  * Additional note: dataset.csv must be chmod 777 in order to write to it.
+ * I have added code to account for this, but I'm not 100% sure it will work.
  *
  */
 
@@ -88,6 +89,8 @@ if ($handle) {
 
 }
 
+// chmod the file we're writing to
+chmod('dataset.csv', 0777);
 // get a new handler for writing the CSV
 $handle = fopen("dataset.csv", 'w');
 
