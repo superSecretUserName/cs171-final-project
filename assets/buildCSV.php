@@ -18,13 +18,11 @@
  * HORAY!
  *
  * Additional note: dataset.csv must be chmod 777 in order to write to it.
- * I have added code to account for this, but I'm not 100% sure it will work.
- *
  */
 
 
 // open our data file
-$handle = fopen('delimited.csv', 'r');
+$handle = fopen('cycle15delimited.csv', 'r');
 $headers = '';
 $values = array();
 // if we successfully opened the file
@@ -51,6 +49,8 @@ if ($handle) {
     if ($buffer === "\n") {
       continue;
     }
+
+    $buffer = str_replace('#&#', '$&', $buffer);
     // break our current line into elements in an array, delimited on $&
     $bufferArray = explode('$&', $buffer);
 
@@ -59,11 +59,11 @@ if ($handle) {
       // if it's not just a blank line
       if ($value != "\n" && $value != "\t" && $value != "\r" ) {
         // remove the end line delimiters 'cause we don't need them
-        $value = str_replace('#&#', ' ', $value);
+        $value = str_replace('#&#', '', $value);
         // remove unnecessary whitespace
         $value = trim($value, " ");
         // remove any special characters
-        $value = trim($value, "\x00..\x1F");
+        $value = trim($value, "\x00..\x20");
         // if it's longer than 0 length
         if (strlen($value) > 0) {
           // push it onto our values array
