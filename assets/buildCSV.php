@@ -73,7 +73,7 @@ if ($handle) {
     // at the end of each record
     if ($i % count($headerArray) == 0) {
       // insert some padding
-      echo "</br></br></br>";
+      echo "</br><hr></br>";
     }
     // output: column_name + : + value
     echo $headerArray[$i % count($headerArray)] . ": " .$values[$i] . "</br>";
