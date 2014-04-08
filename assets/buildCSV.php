@@ -11,6 +11,11 @@
  * after the headers, but before the column/row data.
  * I also removed the line "(25 rows affected)"
  *
+ * One other thing: I have to load the data up in textwrangler and use the
+ * "remove line breaks" option to remove all line breaks not at the end of a line
+ * (not quite sure how else to explain that, as a linebreak shouldn't exist
+ * in the middle of a line). Anyways, it works.
+ *
  * This should work for the entire dataset, given that the format
  * is the same. It should also be flexible enough that we can add additional columns
  * and the script should still run!
@@ -92,15 +97,31 @@ if ($handle) {
 // get a new handler for writing the CSV
 $handle = fopen("dataset.csv", 'w');
 
-//write out headers
-foreach($headerArray as $header) {
-  fwrite($handle, $header . '|');
+
+$value_count = count($values);
+$header_count = count($headerArray);//write out headers
+for ($i = 0; $i < $header_count; $i++) {
+  $header = $headerArray[$i];
+  if ($i % $header_count == $header_count - 1) {
+    fwrite($handle, $header);
+  } else {
+    fwrite($handle, $header . '|');
+  }
 }
+
 // write out values
-foreach($values as $value) {
-  $value = trim($value, " ");
-  fwrite($handle, $value . '|');
+for ($i = 0; $i < $value_count; $i++) {
+  $value = trim($values[$i], " ");
+  if ($i % $header_count == 0) {
+    fwrite($handle, "\n");
+    fwrite($handle, $value . '|');
+  } else if ($i % $header_count == $header_count - 1) {
+    fwrite($handle, $value);
+  } else {
+    fwrite($handle, $value . '|');
+  }
 }
+
 // close our handle
 fclose($handle);
 
