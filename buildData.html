@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Star Data - Chandra</title>
+    <script src="/libs/d3.v3.min.js"></script>
+    <script src='/libs/FileSaver.js'></script>
+</head>
+<body>
+<h1>Building Chandra Data into JSON</h1>
+<script>
+
+	var dsv = d3.dsv('|', 'text/plain');
+	dsv('../assets/dataset.csv', function(error,data) {
+	  if (error) {
+	  	console.log(error);
+	  }
+
+	  var chandraData = {};
+	  var observationData = {};
+
+		for (var i in data) {
+			if (data[i]['ra'] != 'NULL' && data[i]['dec'] != 'NULL') {
+				var target_name = data[i]['targname'];
+				if (!chandraData.hasOwnProperty(target_name)) {
+					chandraData[target_name] = {
+						'abstract': data[i]['abstract'],
+						'approved_exposure_time': data[i]['approved_exposure_time'],
+						'approved_time': data[i]['approved_time'],
+						'category_descrip': data[i]['category_descrip'],
+						'dec': data[i]['dec'],
+						'ra': data[i]['ra'],
+						'first': data[i]['first'],
+						'last': data[i]['last'],
+						'proposal_id': data[i]['proposal_id'],
+						'proposal_number': data[i]['proposal_number'],
+						'targname': data[i]['targname'],
+						'title': data[i]['title'],
+						'type': data[i]['type']
+					}					
+				} else {
+					// handle duplicates in the future!
+				}
+			}
+		}
+		console.log(chandraData);
+		saveToFile(chandraData,'chandraData.json');
+		for (var i in data) {
+			if (data[i]['ra'] != 'NULL' && data[i]['dec'] != 'NULL') {
+				
+				var proposal_number = data[i]['proposal_number'];
+
+				if (!observationData.hasOwnProperty(proposal_number)) {
+					observationData[proposal_number] = [];
+				} 
+				observationData[proposal_number].push({
+					'abstract': data[i]['abstract'],
+					'approved_exposure_time': data[i]['approved_exposure_time'],
+					'approved_time': data[i]['approved_time'],
+					'category_descrip': data[i]['category_descrip'],
+					'dec': data[i]['dec'],
+					'ra': data[i]['ra'],
+					'first': data[i]['first'],
+					'last': data[i]['last'],
+					'proposal_id': data[i]['proposal_id'],
+					'proposal_number': data[i]['proposal_number'],
+					'targname': data[i]['targname'],
+					'title': data[i]['title'],
+					'type': data[i]['type']
+				});			
+			}
+		}
+		console.log(observationData);
+		saveToFile(observationData,'observationData.json');
+	});
+  var saveToFile = function(object, filename){
+    var blob, blobText;
+    blobText = [JSON.stringify(object)];
+    blob = new Blob(blobText, {
+      type: 'text/plain;charset=utf-8'
+    });
+    saveAs(blob, filename);
+  }
+</script>
+</body>
+</html>
