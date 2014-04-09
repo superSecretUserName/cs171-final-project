@@ -27,7 +27,7 @@
 
 
 // open our data file
-$handle = fopen('cycle15delimited.csv', 'r');
+$handle = fopen('rawData/cycle01delimited.csv', 'r');
 $headers = '';
 $values = array();
 // if we successfully opened the file
@@ -64,7 +64,7 @@ if ($handle) {
       // if it's not just a blank line
       if ($value != "\n" && $value != "\t" && $value != "\r" ) {
         // remove the end line delimiters 'cause we don't need them
-        $value = str_replace('#&#', '', $value);
+        $value = str_replace('#&#', ' ', $value);
         // remove unnecessary whitespace
         $value = trim($value, " ");
         // remove any special characters
