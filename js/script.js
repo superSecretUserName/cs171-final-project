@@ -8,22 +8,20 @@ var width = document.body.clientWidth,
     midWidth = document.body.clientWidth/2,
     midHeight = document.body.clientHeight/2;
 
-var world = {height:150,width:150,scale:80}
+var world = {height:300,width:300,scale:300}
 var worldPadding = {top:20,left:20}
 
 // World Projection
 var worldProjection = d3.geo.orthographic()
     .scale(world.scale) 
-    .translate([100, 100])
-    .clipAngle(90);
+    .translate([(world.height+20),(world.width+20)])
+    .clipAngle(90)
+    .precision(.1);
 
 var worldPath = d3.geo.path().projection(worldProjection);
 
 // latitudinal and longitudinal lines
 var graticule = d3.geo.graticule();
-
-// Star Projection
-// ..
 
 var svg = d3.select('#vis').append('svg')
 						.attr('width', width)
@@ -38,6 +36,11 @@ var worldGroup = svg.append('g')
 										.classed('world-group', true)
 										.attr('transform', 'translate(0,0)');
 
+worldGroup.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", worldPath);
+
 d3.json('../assets/world.json',function(error,data){
 	if (error) {
 		console.log(error);
@@ -48,15 +51,13 @@ d3.json('../assets/world.json',function(error,data){
 	worldGroup.append('path')
 	    			.datum(topojson.feature(worldData, worldData.objects.land))
       			.attr('class', 'country')
-      			.attr('d', worldPath);
+      			.attr('d', worldPath);	
 
- // worldGroup.appebnd('path')
- // 			.classed('country', true)
- //      .datum(topojson.mesh(worldData, worldData.objects.countries, function(a, b) { return a !== b; }))
- //      .attr('class', 'boundary')
- //      .attr('d', path);
-loadChandraData();
-	//loadObservationData();
+	worldGroup.append('path')
+	    			.datum(topojson.mesh(worldData, worldData.objects.countries, function(a, b) { return a !== b; }))
+      			.attr('class', 'boundary')
+      			.attr('d', worldPath);	
+
 });
 
 var loadChandraData = function(){
