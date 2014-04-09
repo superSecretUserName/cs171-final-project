@@ -81,6 +81,8 @@ d3.json('../assets/world.json',function(error,data){
     	.on('mousemove', mouseMove)
     	.on('mouseup', mouseUp);
 
+  
+  loadChandraData();
 });
 
 var loadChandraData = function(){
