@@ -6,14 +6,14 @@ body {
 .dataArea {
   clip-path: url(#clip);
 }
-/*.stroke {
-  fill: none;
-  stroke: #000;
-  stroke-width: 3px;
-}*/
+.world-path-stroke {
+  fill: #1c5779;
+  stroke: #636363;
+  stroke-width: 1px;
+}
 
 .fill {
-  fill: #fff;
+  fill: #15445f;
 }
 
 .graticule {
@@ -30,15 +30,7 @@ body {
 }
 
 .country {
-	
-}
-
-/*.land {
-  fill: #222;
-}
-
-.boundary {
-  fill: none;
-  stroke: #fff;
+  fill: #2a5f15;
+  stroke:#fff;
   stroke-width: .5px;
-}*/
+}

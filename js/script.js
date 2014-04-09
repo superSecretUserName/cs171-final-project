@@ -36,6 +36,15 @@ var worldGroup = svg.append('g')
 										.classed('world-group', true)
 										.attr('transform', 'translate(0,0)');
 
+worldGroup.append('defs').append('path')
+    .datum({type: 'Sphere'})
+    .attr('id', 'world-path')
+    .attr('d', worldPath);
+
+worldGroup.append('use')
+    .attr('class', 'world-path-stroke')
+    .attr('xlink:href', '#world-path');
+
 worldGroup.append("path")
     .datum(graticule)
     .attr("class", "graticule")
