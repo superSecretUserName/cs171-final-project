@@ -1,0 +1,36 @@
+body {
+	margin:0;
+	padding:0;
+}
+
+.dataArea {
+  clip-path: url(#clip);
+}
+.world-path-stroke {
+  fill: #1c5779;
+  stroke: #636363;
+  stroke-width: 1px;
+}
+
+.fill {
+  fill: #15445f;
+}
+
+.graticule {
+  fill: none;
+  stroke: #a6a6a6;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+
+.country {
+  fill: #2a5f15;
+  stroke:#fff;
+  stroke-width: .5px;
+}

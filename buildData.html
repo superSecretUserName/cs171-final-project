@@ -10,7 +10,7 @@
 <script>
 
 	var dsv = d3.dsv('|', 'text/plain');
-	dsv('../assets/dataset.csv', function(error,data) {
+	dsv('../assets/allData.csv', function(error,data) {
 	  if (error) {
 	  	console.log(error);
 	  }
@@ -42,7 +42,7 @@
 				}
 			}
 		}
-		console.log(chandraData);
+		//console.log(chandraData);
 		saveToFile(chandraData,'chandraData.json');
 		for (var i in data) {
 			if (data[i]['ra'] != 'NULL' && data[i]['dec'] != 'NULL') {
@@ -69,7 +69,7 @@
 				});			
 			}
 		}
-		console.log(observationData);
+		//console.log(observationData);
 		saveToFile(observationData,'observationData.json');
 	});
   var saveToFile = function(object, filename){
