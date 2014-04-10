@@ -94,7 +94,8 @@ starGroup.append('path')
     .attr('class', 'star-graticule')
     .attr('d', starPath);
 
-starPaths = starSvg.selectAll('path');
+var starsGroup = starSvg.append('g')
+		.classed('stars-group', true);
 
 ////// Rotate functions
 
@@ -190,7 +191,23 @@ var loadObservationData = function(){
 
 var buildStarMap = function(){
 	console.log(chandraData);
-	console.log(observationData);
+	//console.log(observationData);
+
+//[{"type": "Feature","geometry": {"type": "Point","coordinates": ["0","10"]},"properties": {"name": "London, UK"}}]
+
+	var circles = starsGroup.selectAll('path')
+			    	.data(chandraData.geoCoords)
+			    	.enter()
+			    	.append('svg:path')
+			    		.attr('class', function(d){
+			    			//console.log(d);
+			    			return 'star-point';
+			    		})
+			    		.attr('d', starPath);
+			    		// .on('mouseover', function(){console.log('test mouse over');})
+			    		// .on('mouseout', function(){console.log('mouse out');});
+
+	starPaths = starSvg.selectAll('path');
 
 	// add points here!
 }
