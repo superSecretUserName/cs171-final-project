@@ -5,7 +5,7 @@ var worldData, chandraData, observationData, globePaths, rotating, m0, m1, delta
 
 var world = {width:200,height:200,scale:100}
 
-var star = {width:900, height:500, scale: 1000}
+var star = {width:900, height:500, scale: 800}
 
 // latitudinal and longitudinal lines
 var graticule = d3.geo.graticule();
@@ -207,8 +207,14 @@ var buildStarMap = function(){
 				return 'star-point';
 			})
 			.attr('d', starPath)
-			.on('mouseover', function(){console.log('test mouse over');})
-			.on('mouseout', function(){console.log('mouse out');});
+			.on('mouseover', function(d){
+				console.log(d);
+				console.log('test mouse over');
+			})
+			.on('mouseout', function(d){
+				console.log(d);
+				console.log('mouse out');
+			});
 
 	starPaths = starSvg.selectAll('path');
 }
