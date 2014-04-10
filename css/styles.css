@@ -1,5 +1,5 @@
 html{
-  background-color:#102359;
+  background-color:#0b1739;
 }
 body {
 	margin:0;
@@ -13,15 +13,22 @@ svg.world {
   cursor: move;
 }
 svg.stars {
-  margin-top:20px;
-  float:left;
-  clear:none;
+  position: absolute;
+  top:220px;
+  left:0;
+  width:900px;
+  height:500px;
 }
 .world path {
   pointer-events: none;
 }
 .star-point {
-  fill: #f4fee1;
+  fill: #e3d326;
+}
+.star-point:hover {
+  stroke: #2657e3;
+  stroke-width:2;
+  cursor: pointer;
 }
 /*.dataArea {
   clip-path: url(#clip);

@@ -5,7 +5,7 @@ var worldData, chandraData, observationData, globePaths, rotating, m0, m1, delta
 
 var world = {width:200,height:200,scale:100}
 
-var star = {width:600, height:600, scale: 800}
+var star = {width:900, height:500, scale: 1000}
 
 // latitudinal and longitudinal lines
 var graticule = d3.geo.graticule();
@@ -66,11 +66,11 @@ var starProjection = d3.geo.orthographic()
     .clipAngle(90)
     .precision(.1);
 
-var starPath = d3.geo.path().projection(starProjection).pointRadius(2);
+var starPath = d3.geo.path().projection(starProjection).pointRadius(3);
 
 var starSvg = d3.select('#vis').append('svg')
-		.attr('width', star.width)
-		.attr('height', star.height)
+		// .attr('width', star.width)
+		// .attr('height', star.height)
 		.attr('class','stars');
 
 var starGroup = starSvg.append('g')
@@ -196,21 +196,19 @@ var loadObservationData = function(){
 var buildStarMap = function(){
 	console.log(chandraData);
 	//console.log(observationData);
-	// [{"type": "Feature","geometry": {"type": "Point","coordinates": ["0","10"]},"properties": {"name": "London, UK"}}]
 
 	// star points
 	var circles = starsGroup.selectAll('path')
-			    	.data(chandraData.geoCoords)
-			    	.enter()
-			    	.append('svg:path')
-			    		.attr('class', function(d){
-			    			//console.log(d);
-			    			return 'star-point';
-			    		})
-			    		.attr('d', starPath);
-
-			    		// .on('mouseover', function(){console.log('test mouse over');})
-			    		// .on('mouseout', function(){console.log('mouse out');});
+			.data(chandraData.geoCoords)
+			.enter()
+			.append('svg:path')
+			.attr('class', function(d){
+				//console.log(d);
+				return 'star-point';
+			})
+			.attr('d', starPath)
+			.on('mouseover', function(){console.log('test mouse over');})
+			.on('mouseout', function(){console.log('mouse out');});
 
 	starPaths = starSvg.selectAll('path');
 }
