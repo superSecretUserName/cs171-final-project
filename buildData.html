@@ -16,7 +16,7 @@
 	    .rangeRound([-180,180]);
 	
 	var latScale = d3.scale.linear()
-	    .domain([0, 180])
+	    .domain([-90, 90])
 	    .rangeRound([-90,90]);
 
 	var dsv = d3.dsv('|', 'text/plain');
@@ -64,12 +64,12 @@
 						'type': data[i]['type']
 					}
 					if (lon_lat) {
-						chandraData.geoCoords.push({"type": "Feature","geometry": {"type": "Point","coordinates": lon_lat},"properties": {"name": (data[i]['targname']), 'proposal_number': (data[i]['proposal_number']), 'ra_dec':ra_dec,'lon_lat': lon_lat, 'inverse_lon_lat':inverse_lon_lat }});		
+						chandraData.geoCoords.push({"type": "Feature","geometry": {"type": "Point","coordinates": inverse_lon_lat },"properties": {"name": (data[i]['targname']), 'proposal_number': (data[i]['proposal_number']), 'ra_dec':ra_dec,'lon_lat': lon_lat, 'inverse_lon_lat':inverse_lon_lat }});		
 					}			
 				}
 			}
 		}
-		//console.log(chandraData);
+		console.log(chandraData);
 		saveToFile(chandraData,'chandraData.json');
 		return;
 		for (var i in data) {

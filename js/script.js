@@ -101,20 +101,24 @@ var starsGroup = starSvg.append('g')
 
 var moveDelta = function(ch){
 	if (ch) {
+		// globe
 		var cd0 = c0[0] - ch[0];
 		var cd1 = c0[1] - ch[1];
-		moveTo([cd0,cd1]);
+		// stars
+		var s0 = ch[0] - c0[0];
+		var s1 = c0[1] - ch[1];
+		moveTo([cd0,cd1],[s0,s1]);
 	}
 }
-var moveTo = function(coords){
-	if (!coords) return;
+var moveTo = function(gCoords,sCoords){
+	if (!gCoords || !sCoords) return;
 	// world coords
-	worldProjection.rotate(coords);
+	worldProjection.rotate(gCoords);
 	globePaths.attr('d', worldPath);
 	// star coords
-	starProjection.rotate(coords);
+	starProjection.rotate(sCoords);
 	starPaths.attr('d', starPath);
-	c0 = coords;
+	c0 = gCoords;
 }
 var mouseDown = function(){
 	rotating = true;
@@ -192,9 +196,9 @@ var loadObservationData = function(){
 var buildStarMap = function(){
 	console.log(chandraData);
 	//console.log(observationData);
+	// [{"type": "Feature","geometry": {"type": "Point","coordinates": ["0","10"]},"properties": {"name": "London, UK"}}]
 
-//[{"type": "Feature","geometry": {"type": "Point","coordinates": ["0","10"]},"properties": {"name": "London, UK"}}]
-
+	// star points
 	var circles = starsGroup.selectAll('path')
 			    	.data(chandraData.geoCoords)
 			    	.enter()
@@ -208,6 +212,4 @@ var buildStarMap = function(){
 			    		// .on('mouseout', function(){console.log('mouse out');});
 
 	starPaths = starSvg.selectAll('path');
-
-	// add points here!
 }
