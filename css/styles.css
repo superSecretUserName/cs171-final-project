@@ -1,3 +1,6 @@
+html{
+  background-color:#102359;
+}
 body {
 	margin:0;
 	padding:0;
@@ -16,6 +19,9 @@ svg.stars {
 }
 .world path {
   pointer-events: none;
+}
+.star-point {
+  fill: #f4fee1;
 }
 /*.dataArea {
   clip-path: url(#clip);
