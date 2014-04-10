@@ -5,22 +5,38 @@ body {
 svg.world {
   margin:20px 0 0 20px;
   pointer-events: all;
+  float:left;
+  clear:none;
+  cursor: move;
+}
+svg.stars {
+  margin-top:20px;
+  float:left;
+  clear:none;
 }
 .world path {
   pointer-events: none;
 }
-.dataArea {
+/*.dataArea {
   clip-path: url(#clip);
-}
+}*/
 .world-path-stroke {
   fill: #1c4c79;
   stroke: #636363;
-  stroke-width: 1px;
+  stroke-width: .5px;
+  stroke-opacity: .5;
 }
 .fill {
   fill: #15445f;
 }
+.star-graticule,
 .graticule {
+  fill: none;
+  stroke: #1785eb;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+.star-path-stroke {
   fill: none;
   stroke: #1785eb;
   stroke-width: .5px;

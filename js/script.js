@@ -3,56 +3,52 @@
  */
 var worldData, chandraData, observationData, globePaths, rotating, m0, m1, delta = [],c0 = [0,0];
 
-var width = 200,
-    height = 200,
-    midWidth = document.body.clientWidth/2,
-    midHeight = document.body.clientHeight/2;
+var world = {width:200,height:200,scale:100}
 
-var world = {scale:100}
-var worldPadding = {top:20,left:20}
-
-// World Projection
-var worldProjection = d3.geo.orthographic()
-    .scale(world.scale) 
-    .translate([width/2,height/2])
-    .rotate(c0)
-    .clipAngle(90)
-    .precision(.1)
-
-var worldPath = d3.geo.path().projection(worldProjection);
+var star = {width:600, height:600, scale: 300}
 
 // latitudinal and longitudinal lines
 var graticule = d3.geo.graticule();
 
+// scales
+var lonScale = d3.scale.linear()
+    .domain([0, world.width])
+    .rangeRound([-180, 180]);
+
+var latScale = d3.scale.linear()
+    .domain([0, world.height])
+    .rangeRound([90, -90]);
+
+// World Projection
+var worldProjection = d3.geo.orthographic()
+    .scale(world.scale) 
+    .translate([world.width/2,world.height/2])
+    .rotate(c0)
+    .clipAngle(90)
+    .precision(.1)
+
+// world path
+var worldPath = d3.geo.path().projection(worldProjection);
+
+// world svg
 var worldSvg = d3.select('#vis').append('svg')
-		.attr('width', width)
-		.attr('height', height)
+		.attr('width', world.width)
+		.attr('height', world.height)
 		.attr('class','world');
 
 // world group
 var worldGroup = worldSvg.append('g')
-		.classed('world-group', true)
-		.attr('transform', 'translate(0,0)');
+		.classed('world-group', true);
 
-// scales
-var lonScale = d3.scale.linear()
-    .domain([0, width])
-    .rangeRound([-180, 180]);
-
-var latScale = d3.scale.linear()
-    .domain([0, height])
-    .rangeRound([90, -90]);
-
-// defs 
-
-var defs = worldGroup.append('defs');
+// world defs 
+var worldDefs = worldGroup.append('defs');
 		
-defs.append('path')
+	worldDefs.append('path')
     .datum({type: 'Sphere'})
     .attr('id', 'world-path')
     .attr('d', worldPath);
 
-worldGroup.append('use')
+	worldGroup.append('use')
     .attr('class', 'world-path-stroke')
     .attr('xlink:href', '#world-path');
 
@@ -61,6 +57,44 @@ worldGroup.append('path')
     .datum(graticule)
     .attr('class', 'graticule')
     .attr('d', worldPath);
+
+// World Projection
+var starProjection = d3.geo.orthographic()
+    .scale(star.scale) 
+    .translate([star.width/2,star.height/2])
+    // .rotate(c0)
+    .clipAngle(90)
+    .precision(.1);
+
+var starPath = d3.geo.path().projection(starProjection);
+
+var starSvg = d3.select('#vis').append('svg')
+		.attr('width', star.width)
+		.attr('height', star.height)
+		.attr('class','stars');
+
+var starGroup = starSvg.append('g')
+		.classed('star-group', true);
+
+// world defs  !to be removed!
+var starDefs = starGroup.append('defs');
+		
+starDefs.append('path')
+    .datum({type: 'Sphere'})
+    .attr('id', 'star-path')
+    .attr('d', starPath);
+
+starGroup.append('use')
+    .attr('class', 'star-path-stroke')
+    .attr('xlink:href', '#star-path');
+
+// add longitude,latitude
+starGroup.append('path')
+    .datum(graticule)
+    .attr('class', 'star-graticule')
+    .attr('d', starPath);
+
+starPaths = starSvg.selectAll('path');
 
 ////// Rotate functions
 
@@ -73,10 +107,13 @@ var moveDelta = function(ch){
 }
 var moveTo = function(coords){
 	if (!coords) return;
+	// world coords
 	worldProjection.rotate(coords);
 	globePaths.attr('d', worldPath);
+	// star coords
+	starProjection.rotate(coords);
+	starPaths.attr('d', starPath);
 	c0 = coords;
-	console.log('new coords: '+c0);
 }
 var mouseDown = function(){
 	rotating = true;
@@ -103,7 +140,6 @@ d3.selectAll('#vis').append('button').attr('class','click-button').text('reset')
 	var coords = [0,0];
 	moveTo(coords);
 });
-
 ////// end rotate functions
 
 worldSvg.on('mousedown', mouseDown)
@@ -128,7 +164,8 @@ d3.json('../assets/world.json',function(error,data){
       .attr('class', 'boundary')
       .attr('d', worldPath);
 
-	globePaths = worldSvg.selectAll('path');	
+	globePaths = worldSvg.selectAll('path');
+	loadChandraData();
 });
 
 var loadChandraData = function(){
@@ -147,11 +184,13 @@ var loadObservationData = function(){
 			console.log(error);
 		}
 		observationData = data;
-		buildVis();
+		buildStarMap();
 	});
 }
 
-var buildVis = function(){
+var buildStarMap = function(){
 	console.log(chandraData);
 	console.log(observationData);
+
+	// add points here!
 }
