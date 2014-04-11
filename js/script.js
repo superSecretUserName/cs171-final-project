@@ -265,7 +265,7 @@ var buildStarMap = function(){
 			.attr('d', starPath)
 			.on('mouseover', function(d){
                 var proposal_data = chandraData.nameKey[d['properties']['name']];
-				console.log(proposal_data);
+				//console.log(proposal_data);
                 // var xPosition = d.coords[0];
                 // var yPosition = d.coords[1];
                 d3.select("#tooltip_target")
@@ -281,11 +281,12 @@ var buildStarMap = function(){
           		d3.select("#tooltip_abstract")
           			.text(proposal_data['abstract'])
                 d3.select("#tooltip").classed("hidden", false);
-				console.log('test mouse over');
+				//console.log('test mouse over');
 			})
 			.on('mouseout', function(d){
 				//console.log(d);
-				console.log('mouse out');
+				//console.log('mouse out');
+                d3.select("#tooltip").classed("hidden", false);
 			});
 
 	starPaths = starSvg.selectAll('path');
