@@ -21,6 +21,12 @@ svg.stars {
   width:900px;
   height:500px;
 }
+svg.arc-arrow {
+  pointer-events:none;
+  position: absolute;
+  left: 74px;
+  top: 4px;
+}
 .title-description {
   position: absolute;
   width:600px;

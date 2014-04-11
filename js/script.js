@@ -97,6 +97,62 @@ starGroup.append('path')
 var starsGroup = starSvg.append('g')
 		.classed('stars-group', true);
 
+
+// world svg
+var overlaySvg = d3.select('#vis').append('svg')
+		.attr('width', 64)
+		.attr('height', 230)
+		.attr('class','arc-arrow');
+
+overlaySvg.append('path')
+    .attr('d','M 50,16 A -30,111 0 1,0 50,216')
+    .style('stroke-width', 1)
+    .style('stroke', '#fff')
+    .style('fill', 'none');
+
+overlaySvg.append('circle')
+		.attr({
+			cx: 7,
+			cy: 116,
+			r: 3,
+			'class':'view',
+			'fill': '#fff'
+		});
+
+overlaySvg.append('circle')
+		.attr({
+			cx: 46,
+			cy: 116,
+			r: 3,
+			'class':'person',
+			'fill': '#fff'
+		});
+
+overlaySvg.append('defs')
+		.append('marker')
+		.attr({
+			'id': 'markerArrow',
+			'refX': 4,
+			'refY': 2,
+			'markerWidth': 6,
+			'markerHeight': 4,
+			'orient':'auto',
+			'fill':'#fff'
+		})
+		.append('path')
+		.attr('d','M 0,0 V 4 L6,2 Z');
+
+overlaySvg.append('line')
+		.attr({
+			x1: 46,
+			y1: 116,
+			x2: 14,
+			y2: 116,
+			'class':'person',
+			'stroke': '#fff',
+			'fill': 'none',
+			'marker-end': 'url(#markerArrow)'
+		});
 ////// Rotate functions
 
 var moveDelta = function(ch){
