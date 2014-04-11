@@ -58,9 +58,9 @@ d3.json("assets/observationData.json", function(error, data) {
 
 	circle.enter().append("circle")
       	.attr("r", 0)//function(d) {return d.time;})
-      	.attr("fill", "cyan")
+      	.attr("fill", "#a8ddb5")
       	.attr("stroke-width", 2)
-      	.attr("stroke", "yellow");
+      	.attr("stroke", "#43a2ca");
 
     circle.transition().duration(2000).attr("r", function(d){return radius_scale(d['time']);});
 
@@ -68,7 +68,7 @@ d3.json("assets/observationData.json", function(error, data) {
     var force = d3.layout.force()
       				.nodes(nodes)
       				.size([w, h]);
-      				.start();
+      				//.start();
 
     //display_group_all: () =>
     force.gravity(layout_gravity)

@@ -264,11 +264,27 @@ var buildStarMap = function(){
 			})
 			.attr('d', starPath)
 			.on('mouseover', function(d){
-				console.log(d);
+                var proposal_data = chandraData.nameKey[d['properties']['name']];
+				console.log(proposal_data);
+                // var xPosition = d.coords[0];
+                // var yPosition = d.coords[1];
+                d3.select("#tooltip_target")
+                    .text(proposal_data['targname'])
+          		d3.select("#tooltip_prop_num")
+              		.text(proposal_data['proposal_number'])
+          		d3.select("#tooltip_pi")
+          			.text(proposal_data['last'])
+          		d3.select("#tooltip_category")
+          			.text(proposal_data['category_descrip'])
+          		d3.select("#tooltip_time")
+          			.text(proposal_data['approved_time'])
+          		d3.select("#tooltip_abstract")
+          			.text(proposal_data['abstract'])
+                d3.select("#tooltip").classed("hidden", false);
 				console.log('test mouse over');
 			})
 			.on('mouseout', function(d){
-				console.log(d);
+				//console.log(d);
 				console.log('mouse out');
 			});
 
