@@ -286,7 +286,7 @@ var buildStarMap = function(){
 			.on('mouseout', function(d){
 				//console.log(d);
 				//console.log('mouse out');
-                d3.select("#tooltip").classed("hidden", false);
+                d3.select("#tooltip").classed("hidden", true);
 			});
 
 	starPaths = starSvg.selectAll('path');
