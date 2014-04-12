@@ -44,6 +44,7 @@ d3.json("assets/observationData.json", function(error, data) {
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
     radius_scale = d3.scale.linear().domain(time_range).range([4, 85])
+    console.log(time_range);
 
 	//console.log(time_range);
 
@@ -61,6 +62,10 @@ d3.json("assets/observationData.json", function(error, data) {
     display_group_all();
 });
 
+function charge(d) {
+	return -Math.pow(radius_scale(d['time']), 2.0/1.05);
+}
+
 function start() {
 	console.log("start")
     force = d3.layout.force()
@@ -70,8 +75,8 @@ function start() {
 
 function display_group_all() {
 	force.gravity(layout_gravity)
-	     .charge(5)
-	     .friction(1)
+	     .charge(charge)
+	     .friction(0.8)
 	     .on("tick", function(e) {
 	     	console.log('tick')
 	        circles.each(move_towards_center(e.alpha))
