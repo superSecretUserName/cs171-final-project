@@ -43,7 +43,7 @@ d3.json("assets/observationData.json", function(error, data) {
 	nodes = create_nodes(proposalData);
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
-    radius_scale = d3.scale.linear().domain(time_range).range([4, 85])
+    radius_scale = d3.scale.linear().domain(time_range).range([0.8, 200])
     console.log(time_range);
 
 	//console.log(time_range);
