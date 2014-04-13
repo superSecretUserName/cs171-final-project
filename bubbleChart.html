@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8">
-    <style>
 
-    text {
-      font: 10px sans-serif;
-    }
-
-    </style>
+  <link rel="stylesheet" href="css/bubbleChart.css" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 </head>
@@ -19,6 +14,16 @@
 <input type="checkbox" name="cycle" value="cycle14">Cycle 14<br>
 <input type="checkbox" name="cycle" value="cycle13">Cycle 13
 </form>
+
+<div id="tooltip" class="hidden">
+  <h3>Proposal <span id="prop_num"></span></h3>
+  <div id = "hbar"></div>
+  <p>Principle Investigator: <span id="pi"></span></p>
+  <p>Title: <span id="title"></span></p>
+  <p>Time: <span id="time"></span></p>
+  <p>Category: <span id="category"></span></p>
+  <p>Type: <span id="type"></span></p>
+</div>
 
 <div id="vis"></div>
 

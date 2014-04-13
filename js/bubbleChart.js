@@ -10,11 +10,12 @@ $('#cycle_selector').click(function(){
 		checked_cycle = $(this).val()
 		cycle_num = checked_cycle.substring(5,7)
 	    selected_cycles.push(cycle_num);
-	    //console.log(selected_cycles);
+	    console.log(selected_cycles);
 	});
-	    //return selected_cycles;
+	    return selected_cycles;
 });
 
+console.log(selected_cycles);
 
 /*-------------------------------------------------------------------------------------------------
 	D3 Code
@@ -78,8 +79,8 @@ function create_nodes() {
 	    	y: Math.random() * 800
 		}
 
-		if ((!isNaN(node['time'])) && (node['cycle'] === "06")) {
-			console.log(selected_cycles);
+		if ((!isNaN(node['time'])) && (node['cycle'] === "14")) {
+			//console.log(selected_cycles);
 			nodes.push(node);
 		};
 	}
@@ -88,6 +89,7 @@ function create_nodes() {
 
 d3.json("assets/observationData.json", function(error, data) {
 	proposalData = data;
+	//console.log(selected_cycles);
 	nodes = create_nodes(proposalData);
 	console.log(nodes[1]['cycle'])
 
@@ -105,6 +107,28 @@ d3.json("assets/observationData.json", function(error, data) {
       	.attr("fill", function(d) { return fill_color(d['category']) ;})
       	.attr("stroke-width", 1.5)
       	.attr("stroke", function(d) {return d3.rgb(fill_color(d['category'])).darker();});
+
+    circles.on("mouseover", function(d) {
+          var xPosition = d.x;
+          var yPosition = d.y;
+          //Create the tooltip label
+          d3.select("#tooltip")
+            .style("left", xPosition+radius_scale(d['time']) + "px")
+            .style("top", yPosition + "px")
+          //d3.select("#hbar").attr("fill", fill_color(d['category']))
+          d3.select("#prop_num").text(d['proposal_number'])
+          d3.select("#pi").text(d['last'])
+          d3.select("#title").text(d['title'])
+          d3.select("#time").text(d['time'])
+          d3.select("#type").text(d['type'])
+          d3.select("#category").text(d['category']);
+          //Show the tooltip
+          d3.select("#tooltip").classed("hidden", false);
+         })
+        .on("mouseout", function() {
+          //Hide the tooltip
+          d3.select("#tooltip").classed("hidden", true);
+        });
 
     circles.transition().duration(2000).attr("r", function(d){return radius_scale(d['time']);});
     start();
