@@ -1,3 +1,25 @@
+var selected_cycles;
+
+/*-------------------------------------------------------------------------------------------------
+	Cycle Selector
+-------------------------------------------------------------------------------------------------*/
+
+$('#cycle_selector').click(function(){
+	var selected_cycles = new Array();
+	$('#cycle_selector :checkbox:checked').each(function() {
+		checked_cycle = $(this).val()
+		cycle_num = checked_cycle.substring(5,7)
+	    selected_cycles.push(cycle_num);
+	    //console.log(selected_cycles);
+	});
+	    //return selected_cycles;
+});
+
+
+/*-------------------------------------------------------------------------------------------------
+	D3 Code
+-------------------------------------------------------------------------------------------------*/
+
 var w = 940;
 var h = 600;
 var center = {x: w/2, y: h/2};
@@ -56,7 +78,8 @@ function create_nodes() {
 	    	y: Math.random() * 800
 		}
 
-		if ((!isNaN(node['time'])) && (node['cycle'] === "15")) {
+		if ((!isNaN(node['time'])) && (node['cycle'] === "06")) {
+			console.log(selected_cycles);
 			nodes.push(node);
 		};
 	}
@@ -69,7 +92,7 @@ d3.json("assets/observationData.json", function(error, data) {
 	console.log(nodes[1]['cycle'])
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
-    radius_scale = d3.scale.linear().domain(time_range).range([3, 170])
+    radius_scale = d3.scale.linear().domain(time_range).range([3, 160])
     //console.log(time_range);
 
 	//console.log(time_range);
@@ -121,19 +144,6 @@ function move_towards_center(alpha) {
  
 //console.log("end");
 
-/*-------------------------------------------------------------------------------------------------
-	Cycle Selector
--------------------------------------------------------------------------------------------------*/
-
-$('#cycle_selector').click(function(){
-	var selected_cycles = new Array();
-	$('#cycle_selector :checkbox:checked').each(function() {
-		checked_cycle = $(this).val()
-		cycle_num = checked_cycle.substring(5,7)
-	    selected_cycles.push(cycle_num);
-	    console.log(selected_cycles);
-	});
-});
 
 
 
