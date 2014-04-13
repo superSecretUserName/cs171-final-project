@@ -8,6 +8,31 @@ var damper = 0.5
 var nodes = [];
 var vis, force, circles, radius_scale;
 
+var fill_color = d3.scale.ordinal()
+                  .domain(["STARS AND WD", 
+                  		   	"GALACTIC DIFFUSE EMISSION AND SURVEYS", 
+                  			"WD BINARIES AND CV",
+                  			"BH AND NS BINARIES",
+                  			"SN, SNR AND ISOLATED NS",
+                  			"NORMAL GALAXIES: DIFFUSE EMISSION",
+                  			"NORMAL GALAXIES: X-RAY POPULATIONS",
+                  			"ACTIVE GALAXIES AND QUASARS",
+                  			"CLUSTERS OF GALAXIES",
+                  			"EXTRAGALACTIC DIFFUSE EMISSION AND SURVEYS",
+                  			"GALACTIC DIFFUSE EMISSION AND SURVEYS",
+                  			"SOLAR SYSTEM"])
+                  .range(["#66c2a4", 
+                  		   	"#8c96c6", 
+                  			"#7bccc4",
+                  			"#fc8d59",
+                  			"#74a9cf",
+                  			"#67a9cf",
+                  			"#df65b0",
+                  			"#78c679",
+                  			"#41b6c4",
+                  			"#fe9929",
+                  			"#fd8d3c",
+                  			"#f768a1"]);
 
 var svg = d3.select("body").append("svg")
     .attr("width", w)
@@ -43,7 +68,7 @@ d3.json("assets/observationData.json", function(error, data) {
 	nodes = create_nodes(proposalData);
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
-    radius_scale = d3.scale.linear().domain(time_range).range([0.8, 200])
+    radius_scale = d3.scale.linear().domain(time_range).range([3, 170])
     console.log(time_range);
 
 	//console.log(time_range);
@@ -53,9 +78,10 @@ d3.json("assets/observationData.json", function(error, data) {
 
 	circles.enter().append("circle")
       	.attr("r", 0)//function(d) {return d.time;})
-      	.attr("fill", "#a8ddb5")
-      	.attr("stroke-width", 2)
-      	.attr("stroke", "#43a2ca");
+      	//.attr("fill", category_color)
+      	.attr("fill", function(d) { return fill_color(d['category']) ;})
+      	.attr("stroke-width", 1.5)
+      	.attr("stroke", function(d) {return d3.rgb(fill_color(d['category'])).darker();});
 
     circles.transition().duration(2000).attr("r", function(d){return radius_scale(d['time']);});
     start();
@@ -63,7 +89,7 @@ d3.json("assets/observationData.json", function(error, data) {
 });
 
 function charge(d) {
-	return -Math.pow(radius_scale(d['time']), 2.0/1.05);
+	return -Math.pow(radius_scale(d['time']), 2/1.06);
 }
 
 function start() {
@@ -93,7 +119,12 @@ function move_towards_center(alpha) {
 	};
 }
  
+// function category_color() {
+//     circles.attr("fill", function(d) {
+//     	console.log(d['category']); //"#a8ddb5"
 
+// 	}
+// )}
 
 
 console.log("end");
