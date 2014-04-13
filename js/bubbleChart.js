@@ -66,10 +66,11 @@ function create_nodes() {
 d3.json("assets/observationData.json", function(error, data) {
 	proposalData = data;
 	nodes = create_nodes(proposalData);
+	console.log(nodes[1]['cycle'])
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
     radius_scale = d3.scale.linear().domain(time_range).range([3, 170])
-    console.log(time_range);
+    //console.log(time_range);
 
 	//console.log(time_range);
 
@@ -77,8 +78,7 @@ d3.json("assets/observationData.json", function(error, data) {
 					.data(nodes);
 
 	circles.enter().append("circle")
-      	.attr("r", 0)//function(d) {return d.time;})
-      	//.attr("fill", category_color)
+      	.attr("r", 0)
       	.attr("fill", function(d) { return fill_color(d['category']) ;})
       	.attr("stroke-width", 1.5)
       	.attr("stroke", function(d) {return d3.rgb(fill_color(d['category'])).darker();});
@@ -93,7 +93,7 @@ function charge(d) {
 }
 
 function start() {
-	console.log("start")
+	//console.log("start")
     force = d3.layout.force()
             .nodes(nodes)
             .size([w, h]);
@@ -104,7 +104,7 @@ function display_group_all() {
 	     .charge(charge)
 	     .friction(0.8)
 	     .on("tick", function(e) {
-	     	console.log('tick')
+	     	//console.log('tick')
 	        circles.each(move_towards_center(e.alpha))
 	               .attr("cx", function(d) {return d.x;})
 	               .attr("cy", function(d) {return d.y;});
@@ -119,13 +119,23 @@ function move_towards_center(alpha) {
 	};
 }
  
-// function category_color() {
-//     circles.attr("fill", function(d) {
-//     	console.log(d['category']); //"#a8ddb5"
+//console.log("end");
 
-// 	}
-// )}
+/*-------------------------------------------------------------------------------------------------
+	Cycle Selector
+-------------------------------------------------------------------------------------------------*/
+
+$('#cycle_selector').click(function(){
+	var selected_cycles = new Array();
+	$('#cycle_selector :checkbox:checked').each(function() {
+		checked_cycle = $(this).val()
+		cycle_num = checked_cycle.substring(5,7)
+	    selected_cycles.push(cycle_num);
+	    console.log(selected_cycles);
+	});
+});
 
 
-console.log("end");
+
+
 

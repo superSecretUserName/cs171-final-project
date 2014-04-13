@@ -1,15 +1,24 @@
 <!DOCTYPE html>
+<head>
 <meta charset="utf-8">
-<style>
+    <style>
 
-text {
-  font: 10px sans-serif;
-}
+    text {
+      font: 10px sans-serif;
+    }
 
-</style>
+    </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+</head>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
+<form id = "cycle_selector">
+<input type="checkbox" name="cycle" value="cycle15" checked>Cycle 15<br>
+<input type="checkbox" name="cycle" value="cycle14">Cycle 14<br>
+<input type="checkbox" name="cycle" value="cycle13">Cycle 13
+</form>
 
 <div id="vis"></div>
 
