@@ -64,36 +64,9 @@ var svg = d3.select("body").append("svg")
     .attr("class", "bubble")
     .attr("id", "svg_vis");
 
-function create_nodes() {
-	for (key in proposalData) {
-		node = {
-			'proposal_number': key,
-			'cycle': key.substring(0,2),
-			'first': proposalData[key][0]['first'],
-			'last': proposalData[key][0]['last'],
-			'time': parseFloat(proposalData[key][0]['approved_time']),
-			'category': proposalData[key][0]['category_descrip'],
-			'title': proposalData[key][0]['title'],
-			'type': proposalData[key][0]['type'],
-			'abstract': proposalData[key][0]['abstract'],
-	    	x: Math.random() * 900,
-	    	y: Math.random() * 800
-		}
 
-		//if ((!isNaN(node['time'])) && (node['cycle'] === "03")) {
-		if (!isNaN(node['time'])) {
-			//console.log(selected_cycles);
-			nodes.push(node);
-		};
-	}
-	return nodes;
-}
-
-d3.json("assets/observationData.json", function(error, data) {
-	proposalData = data;
-	//console.log(selected_cycles);
-	nodes = create_nodes(proposalData);
-	//console.log(nodes[1]['cycle'])
+d3.json("/assets/nodeData.json", function(error, data) {
+	nodes = data;
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
     radius_scale = d3.scale.linear().domain(time_range).range([3, 160])
@@ -101,7 +74,7 @@ d3.json("assets/observationData.json", function(error, data) {
 
 	//find nodes to plot based on selected cycles
 	for (var i = 0; i < nodes.length; i++) {
-		if (nodes[i]['cycle'] === "01") { // check against selected cycles here
+		if (nodes[i]['cycle'] === "14") { // check against selected cycles here
 		//console.log(nodes[i]['cycle']);
 			nodes_to_plot.push(nodes[i]); 
 		};
@@ -110,7 +83,7 @@ d3.json("assets/observationData.json", function(error, data) {
 	//console.log(nodes_to_plot);
 
 	circles = svg.selectAll("circle")
-					.data(nodes_to_plot);
+				.data(nodes_to_plot);
 
 	circles.enter().append("circle")
       	.attr("r", 0)
