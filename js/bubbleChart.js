@@ -1,21 +1,32 @@
-var selected_cycles;
+var selected_cycle;
 
 /*-------------------------------------------------------------------------------------------------
-	Cycle Selector
+	Cycle Selector - checkboxes
+-------------------------------------------------------------------------------------------------*/
+
+// $('#cycle_selector').click(function(){
+// 	var selected_cycles = new Array();
+// 	$('#cycle_selector :checkbox:checked').each(function() {
+// 		checked_cycle = $(this).val()
+// 		cycle_num = checked_cycle.substring(5,7)
+// 	    selected_cycles.push(cycle_num);
+// 	});
+// 	    console.log(selected_cycles);
+// 	    return selected_cycles;
+// });
+
+// console.log(selected_cycles);
+
+/*-------------------------------------------------------------------------------------------------
+	Cycle Selector - radio buttons
 -------------------------------------------------------------------------------------------------*/
 
 $('#cycle_selector').click(function(){
-	var selected_cycles = new Array();
-	$('#cycle_selector :checkbox:checked').each(function() {
-		checked_cycle = $(this).val()
-		cycle_num = checked_cycle.substring(5,7)
-	    selected_cycles.push(cycle_num);
-	});
-	    console.log(selected_cycles);
-	    return selected_cycles;
+	selected_cycle = $("input[type='radio'][name='cycle']:checked").val();
+	console.log(selected_cycle);
 });
 
-console.log(selected_cycles);
+console.log(selected_cycle);
 
 /*-------------------------------------------------------------------------------------------------
 	D3 Code
@@ -74,7 +85,7 @@ d3.json("/assets/nodeData.json", function(error, data) {
 
 	//find nodes to plot based on selected cycles
 	for (var i = 0; i < nodes.length; i++) {
-		if (nodes[i]['cycle'] === "14") { // check against selected cycles here
+		if (nodes[i]['cycle'] === "12") { // check against selected cycles here
 		//console.log(nodes[i]['cycle']);
 			nodes_to_plot.push(nodes[i]); 
 		};

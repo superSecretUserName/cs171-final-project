@@ -9,11 +9,26 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
+<!-- <form id = "cycle_selector">
+  <input type="checkbox" name="cycle" value="cycle15" checked>Cycle 15<br>
+  <input type="checkbox" name="cycle" value="cycle14">Cycle 14<br>
+  <input type="checkbox" name="cycle" value="cycle13">Cycle 13
+</form> -->
+
 <form id = "cycle_selector">
-<input type="checkbox" name="cycle" value="cycle15" checked>Cycle 15<br>
-<input type="checkbox" name="cycle" value="cycle14">Cycle 14<br>
-<input type="checkbox" name="cycle" value="cycle13">Cycle 13
+  <input type='radio' class='cycles' name='cycle' value = '15' id='cycle15' checked>
+  <label for='cycle15'>Cycle 15</label><br>
+
+  <input type='radio' class='cycles' name='cycle' value = '14' id='cycle14'>
+  <label for='cycle14'>Cycle 14</label><br>
+
+  <input type='radio' class='cycles' name='cycle' value = '13' id='cycle13'>
+  <label for='cycle13'>Cycle 13</label><br>
+
+  <input type='radio' class='cycles' name='cycle' value = '12' id='cycle12'>
+  <label for='cycle12'>Cycle 12</label><br>
 </form>
+
 
 <div id="tooltip" class="hidden">
   <h3>Proposal <span id="prop_num"></span></h3>
