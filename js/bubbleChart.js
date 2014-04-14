@@ -29,6 +29,7 @@ var layout_gravity = -0.1
 var damper = 0.5
 
 var nodes = [];
+var nodes_to_plot = [];
 var vis, force, circles, radius_scale;
 
 var fill_color = d3.scale.ordinal()
@@ -79,7 +80,8 @@ function create_nodes() {
 	    	y: Math.random() * 800
 		}
 
-		if ((!isNaN(node['time'])) && (node['cycle'] === "14")) {
+		//if ((!isNaN(node['time'])) && (node['cycle'] === "03")) {
+		if (!isNaN(node['time'])) {
 			//console.log(selected_cycles);
 			nodes.push(node);
 		};
@@ -91,16 +93,24 @@ d3.json("assets/observationData.json", function(error, data) {
 	proposalData = data;
 	//console.log(selected_cycles);
 	nodes = create_nodes(proposalData);
-	console.log(nodes[1]['cycle'])
+	//console.log(nodes[1]['cycle'])
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
     radius_scale = d3.scale.linear().domain(time_range).range([3, 160])
     //console.log(time_range);
 
-	//console.log(time_range);
+	//find nodes to plot based on selected cycles
+	for (var i = 0; i < nodes.length; i++) {
+		if (nodes[i]['cycle'] === "01") { // check against selected cycles here
+		//console.log(nodes[i]['cycle']);
+			nodes_to_plot.push(nodes[i]); 
+		};
+	};
+
+	//console.log(nodes_to_plot);
 
 	circles = svg.selectAll("circle")
-					.data(nodes);
+					.data(nodes_to_plot);
 
 	circles.enter().append("circle")
       	.attr("r", 0)
