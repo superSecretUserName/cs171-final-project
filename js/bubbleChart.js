@@ -10,8 +10,8 @@ $('#cycle_selector').click(function(){
 		checked_cycle = $(this).val()
 		cycle_num = checked_cycle.substring(5,7)
 	    selected_cycles.push(cycle_num);
-	    console.log(selected_cycles);
 	});
+	    console.log(selected_cycles);
 	    return selected_cycles;
 });
 
