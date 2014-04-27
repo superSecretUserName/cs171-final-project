@@ -4,8 +4,16 @@
 var worldData, chandraData, observationData, globePaths, rotating, m0, m1, delta = [],c0 = [0,0];
 
 var world = {width:200,height:200,scale:100}
+var star = {width:900, height:480, scale: 800}
+var cycle = {width: 400, height:700}
 
-var star = {width:900, height:500, scale: 800}
+// cycles svg
+
+// world svg
+var cycleSvg = d3.select('#vis').append('svg')
+		.attr('width', cycle.width)
+		.attr('height', cycle.height)
+		.attr('class','cycle');
 
 // latitudinal and longitudinal lines
 var graticule = d3.geo.graticule();
@@ -290,4 +298,6 @@ var buildStarMap = function(){
 			});
 
 	starPaths = starSvg.selectAll('path');
+
+
 }
