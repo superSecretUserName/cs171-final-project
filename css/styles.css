@@ -57,7 +57,13 @@ svg.cycle {
   stroke-width:2;
   cursor: pointer;
 }
-.click-button {
+.controls {
+  display: block;
+  float:left;
+}
+.click-button,
+.scale-up,
+.scale-down {
   background-color: #1b4c7d;
   border: 0;
   color: #fff;
@@ -67,8 +73,21 @@ svg.cycle {
   margin-top: 10px;
   border:1px solid #1259a0;
   cursor: pointer;
+  -moz-user-select: none; 
+  -khtml-user-select: none; 
+  -webkit-user-select: none; 
+  -o-user-select: none; 
 }
-.click-button:hover {
+.scale-up,
+.scale-down {
+  display: block;
+  text-align: center;
+  margin-top:10px;
+  margin-left:10px;
+}
+.click-button:hover,
+.scale-up:hover,
+.scale-down:hover {
   background-color:#1259a0;
 }
 /*.dataArea {
@@ -173,4 +192,8 @@ svg.cycle {
   font-family: sans-serif;
   font-size: 12px;
   line-height: 16px;
+  font-weight: bold;
+}
+#tooltip p span {
+  font-weight: normal;
 }

@@ -1,10 +1,10 @@
 /**
  * Created by consensus on 4/6/14.
  */
-var worldData, chandraData, observationData, globePaths, rotating, m0, m1, delta = [],c0 = [0,0];
+var worldData, chandraData, observationData, globePaths, rotating, currentScale = 800, m0, m1, delta = [],c0 = [0,0];
 
 var world = {width:200,height:200,scale:100}
-var star = {width:900, height:480, scale: 800}
+var star = {width:900, height:480, scale: currentScale}
 var cycle = {width: 400, height:700}
 
 // cycles svg
@@ -294,10 +294,43 @@ var buildStarMap = function(){
 				//console.log(d);
 				//console.log('mouse out');
         d3.select('#tooltip').classed('hidden', true);
-			});
+			})
 
 	starPaths = starSvg.selectAll('path');
 }
+
+// scale controls
+var controls = starSvg.append('foreignObject')
+    .attr('width',40)
+    .attr('height',80)
+  	.classed('foreign-object-controls', true)
+    .append("xhtml:body")
+    .append('div')
+    .classed('controls', true);
+var buildStars = function(newScale){
+	starProjection.scale(newScale);
+	starPaths.attr('d', starPath);
+}
+var scaleUp = function(){
+	if (currentScale >= 2000) return;
+	var newScale = currentScale+100;
+	currentScale = newScale;
+	buildStars(newScale);
+}
+var scaleDown = function(){
+	if (currentScale <= 800) return;
+	var newScale = currentScale-100;
+	currentScale = newScale;
+	buildStars(newScale);
+}
+var zoomIn = controls.append('div')
+    .classed('scale-up', true)
+    .text('+')
+    .on('click', scaleUp);
+var zoomOut = controls.append('div')
+    .classed('scale-down', true)
+    .text('-')
+    .on('click', scaleDown);
 
 /* ****
 Add Katy JS below here
