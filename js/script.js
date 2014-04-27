@@ -276,17 +276,17 @@ var buildStarMap = function(){
 				//console.log(proposal_data);
                 // var xPosition = d.coords[0];
                 // var yPosition = d.coords[1];
-                d3.select("#tooltip_target")
+                d3.select("#tooltip-target")
                     .text(proposal_data['targname'])
-          		d3.select("#tooltip_prop_num")
-              		.text(proposal_data['proposal_number'])
-          		d3.select("#tooltip_pi")
+          		d3.select("#tooltip-prop-num")
+              		.text(proposal_data['proposal-number'])
+          		d3.select("#tooltip-pi")
           			.text(proposal_data['last'])
-          		d3.select("#tooltip_category")
-          			.text(proposal_data['category_descrip'])
-          		d3.select("#tooltip_time")
-          			.text(proposal_data['approved_time'])
-          		d3.select("#tooltip_abstract")
+          		d3.select("#tooltip-category")
+          			.text(proposal_data['category-descrip'])
+          		d3.select("#tooltip-time")
+          			.text(proposal_data['approved-time'])
+          		d3.select("#tooltip-abstract")
           			.text(proposal_data['abstract'])
                 d3.select("#tooltip").classed("hidden", false);
 				//console.log('test mouse over');
@@ -294,7 +294,7 @@ var buildStarMap = function(){
 			.on('mouseout', function(d){
 				//console.log(d);
 				//console.log('mouse out');
-                d3.select("#tooltip").classed("hidden", true);
+        d3.select("#tooltip").classed("hidden", true);
 			});
 
 	starPaths = starSvg.selectAll('path');

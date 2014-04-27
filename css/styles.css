@@ -56,6 +56,20 @@ svg.cycle {
   stroke-width:2;
   cursor: pointer;
 }
+.click-button {
+  background-color: #1b4c7d;
+  border: 0;
+  color: #fff;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  margin-top: 10px;
+  border:1px solid #1259a0;
+  cursor: pointer;
+}
+.click-button:hover {
+  background-color:#1259a0;
+}
 /*.dataArea {
   clip-path: url(#clip);
 }*/
@@ -116,12 +130,21 @@ svg.cycle {
 }
 
 #tooltip {
-/*    position: absolute;*/
-  float: right;
-  width: 300px;
+  /*position: absolute;*/
+/*  float: right;
   height: auto;
   padding: 10px;
-  background-color: white;
+  background-color: #80bfff;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;*/
+  position: absolute;
+  padding: 10px;
+  background-color: #80bfff;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
@@ -129,10 +152,15 @@ svg.cycle {
   -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   pointer-events: none;
+  width: 592px;
+  color: #000;
+  top: 10px;
+  left: 290px;
+  min-height: 190px;
 }
 
-#tooltip_text{
-  width: 350px;
+#tooltip-text {
+  /*width: 350px;*/
 }
 
 #tooltip.hidden {
