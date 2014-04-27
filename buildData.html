@@ -24,8 +24,8 @@
 	  if (error) {
 	  	console.log(error);
 	  }
-
-	  var chandraData = { geoCoords:[], nameKey:{} };
+	  console.log(data);
+	  var chandraData = { geoCoords:[], nameKey:{}, cycles:{} };
 	  var observationData = {};
 
 	  // 
@@ -40,11 +40,8 @@
 
 					var latitude = latScale(data[i]['dec']);
 					var longitude = lonScale(data[i]['ra']);
-					
 					var ra_dec = [(data[i]['ra']),(data[i]['dec'])];
-					
 					var lon_lat = [longitude,latitude];
-					
 					var inverse_lon_lat = [-longitude,latitude];
 
 					chandraData.nameKey[target_name] = {
@@ -66,7 +63,15 @@
 					if (lon_lat) {
 						// [{"type": "Feature","geometry": {"type": "Point","coordinates": ["0","10"]},"properties": {"name": "London, UK"}}]
 						chandraData.geoCoords.push({"type": "Feature","geometry": {"type": "Point","coordinates": inverse_lon_lat },"properties": {"name": (data[i]['targname']), 'proposal_number': (data[i]['proposal_number']), 'ra_dec':ra_dec,'lon_lat': lon_lat, 'inverse_lon_lat':inverse_lon_lat }});		
-					}			
+					}
+					var cycle = data[i]['proposal_number'].substring(0,2);
+					if (cycle.length == 2) {
+						var cycleNum = parseInt(cycle);
+						if (!chandraData.cycles.hasOwnProperty(cycleNum)) {
+							chandraData.cycles[cycleNum] = [];
+						}
+						chandraData.cycles[cycleNum].push(chandraData.nameKey[target_name]);
+					}
 				}
 			}
 		}
@@ -98,7 +103,7 @@
 			}
 		}
 		//console.log(observationData);
-		saveToFile(observationData,'observationData.json');
+		//saveToFile(observationData,'observationData.json');
 	});
   var saveToFile = function(object, filename){
     var blob, blobText;

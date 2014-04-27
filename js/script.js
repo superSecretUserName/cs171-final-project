@@ -105,7 +105,6 @@ starGroup.append('path')
 var starsGroup = starSvg.append('g')
 		.classed('stars-group', true);
 
-
 // world svg
 var overlaySvg = d3.select('#vis').append('svg')
 		.attr('width', 64)
@@ -298,4 +297,6 @@ var buildStarMap = function(){
 			});
 
 	starPaths = starSvg.selectAll('path');
+
+
 }
