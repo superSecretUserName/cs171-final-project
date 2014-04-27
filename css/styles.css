@@ -50,6 +50,7 @@ svg.cycle {
 }
 .star-point {
   fill: #e3d326;
+  stroke:#000;
 }
 .star-point:hover {
   stroke: #2657e3;
