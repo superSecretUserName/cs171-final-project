@@ -297,6 +297,10 @@ var buildStarMap = function(){
 			});
 
 	starPaths = starSvg.selectAll('path');
-
-
 }
+
+/* ****
+Add Katy JS below here
+* *****/
+
+
