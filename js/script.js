@@ -1,11 +1,19 @@
 /**
  * Created by consensus on 4/6/14.
  */
-var worldData, chandraData, observationData, globePaths, rotating, m0, m1, delta = [],c0 = [0,0];
+var worldData, chandraData, observationData, globePaths, rotating, currentScale = 800, m0, m1, delta = [],c0 = [0,0];
 
 var world = {width:200,height:200,scale:100}
+var star = {width:900, height:480, scale: currentScale}
+var cycle = {width: 400, height:700}
 
-var star = {width:900, height:500, scale: 800}
+// cycles svg
+
+// world svg
+var cycleSvg = d3.select('#vis').append('svg')
+		.attr('width', cycle.width)
+		.attr('height', cycle.height)
+		.attr('class','cycle');
 
 // latitudinal and longitudinal lines
 var graticule = d3.geo.graticule();
@@ -96,7 +104,6 @@ starGroup.append('path')
 
 var starsGroup = starSvg.append('g')
 		.classed('stars-group', true);
-
 
 // world svg
 var overlaySvg = d3.select('#vis').append('svg')
@@ -264,30 +271,69 @@ var buildStarMap = function(){
 			})
 			.attr('d', starPath)
 			.on('mouseover', function(d){
-                var proposal_data = chandraData.nameKey[d['properties']['name']];
+        var proposal_data = chandraData.nameKey[d['properties']['name']];
 				//console.log(proposal_data);
-                // var xPosition = d.coords[0];
-                // var yPosition = d.coords[1];
-                d3.select("#tooltip_target")
-                    .text(proposal_data['targname'])
-          		d3.select("#tooltip_prop_num")
-              		.text(proposal_data['proposal_number'])
-          		d3.select("#tooltip_pi")
-          			.text(proposal_data['last'])
-          		d3.select("#tooltip_category")
-          			.text(proposal_data['category_descrip'])
-          		d3.select("#tooltip_time")
-          			.text(proposal_data['approved_time'])
-          		d3.select("#tooltip_abstract")
-          			.text(proposal_data['abstract'])
-                d3.select("#tooltip").classed("hidden", false);
+        // var xPosition = d.coords[0];
+        // var yPosition = d.coords[1];
+        d3.select('#tooltip-target')
+          .text(proposal_data['targname']);
+        d3.select('#tooltip-prop-num')
+          .text(proposal_data['proposal-number']);
+        d3.select('#tooltip-pi')
+        	.text(proposal_data['last']);
+        d3.select('#tooltip-category')
+        	.text(proposal_data['category-descrip']);
+        d3.select('#tooltip-time')
+        	.text(proposal_data['approved-time']);
+        d3.select('#tooltip-abstract')
+        	.text(proposal_data['abstract']);
+        d3.select('#tooltip').classed('hidden', false);
 				//console.log('test mouse over');
 			})
 			.on('mouseout', function(d){
 				//console.log(d);
 				//console.log('mouse out');
-                d3.select("#tooltip").classed("hidden", true);
-			});
+        d3.select('#tooltip').classed('hidden', true);
+			})
 
 	starPaths = starSvg.selectAll('path');
 }
+
+// scale controls
+var controls = starSvg.append('foreignObject')
+    .attr('width',40)
+    .attr('height',80)
+  	.classed('foreign-object-controls', true)
+    .append("xhtml:body")
+    .append('div')
+    .classed('controls', true);
+var buildStars = function(newScale){
+	starProjection.scale(newScale);
+	starPaths.attr('d', starPath);
+}
+var scaleUp = function(){
+	if (currentScale >= 2000) return;
+	var newScale = currentScale+100;
+	currentScale = newScale;
+	buildStars(newScale);
+}
+var scaleDown = function(){
+	if (currentScale <= 800) return;
+	var newScale = currentScale-100;
+	currentScale = newScale;
+	buildStars(newScale);
+}
+var zoomIn = controls.append('div')
+    .classed('scale-up', true)
+    .text('+')
+    .on('click', scaleUp);
+var zoomOut = controls.append('div')
+    .classed('scale-down', true)
+    .text('-')
+    .on('click', scaleDown);
+
+/* ****
+Add Katy JS below here
+* *****/
+
+
