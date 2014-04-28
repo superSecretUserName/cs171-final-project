@@ -125,3 +125,55 @@ th{
 	height:5px;
 	background-color: #78c679;
 }
+
+.btn {
+    border: none;
+    font-family: 'Doppio One', sans-serif;
+    font-size: 12px;
+    color: inherit;
+    background: none;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+    display: inline-block;
+    margin: 15px 8px;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    outline: none;
+    position: relative;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+}
+
+.btn:after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+*, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+body, html { font-size: 100%; padding: 0; margin: 0; height: 100%;}
+
+
+
+/* Button 1 */
+.btn {
+    border: 2px solid #000;
+    color: #000;
+}
+
+/* Button 1a */
+.btn:hover,
+.btn:active {
+    color: #0e83cd;
+    background: #fff;
+}

@@ -1,4 +1,4 @@
-var selected_cycle;
+
 
 /*-------------------------------------------------------------------------------------------------
 	Cycle Selector - checkboxes
@@ -20,13 +20,15 @@ var selected_cycle;
 /*-------------------------------------------------------------------------------------------------
 	Cycle Selector - radio buttons
 -------------------------------------------------------------------------------------------------*/
+var selected_cycle;
 
-$('#cycle_selector').click(function(){
-	selected_cycle = $("input[type='radio'][name='cycle']:checked").val();
-	console.log(selected_cycle);
-});
+// $('#cycle_selector').click(function(){
+// 	selected_cycle = $("input[type='radio'][name='cycle']:checked").val();
+// 	console.log(selected_cycle);
+// 	arrange_nodes(selected_cycle);
+// });
 
-console.log(selected_cycle);
+//console.log(selected_cycle);
 
 /*-------------------------------------------------------------------------------------------------
 	D3 Code
@@ -40,8 +42,7 @@ var layout_gravity = -0.1
 var damper = 0.5
 
 var nodes = [];
-var nodes_to_plot = [];
-var vis, force, circles, radius_scale;
+var vis, force, radius_scale;
 
 var fill_color = d3.scale.ordinal()
                   .domain(["STARS AND WD", 
@@ -81,19 +82,47 @@ d3.json("/assets/nodeData.json", function(error, data) {
 
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
     radius_scale = d3.scale.linear().domain(time_range).range([3, 160])
-    //console.log(time_range);
 
 	//find nodes to plot based on selected cycles
+
+	//arrange_nodes();
+	// make_nodes("15");
+ //    start();
+ //    display_group_all();
+
+    d3.selectAll("button")
+    	.on("click", function(){
+			var buttonID = d3.select(this).attr("id")
+			if (buttonID == "remove") {
+    			remove_nodes();
+			}else{
+				var clicked_cycle = buttonID.substring(5,7)
+	    		//console.log("click1!")
+	    		console.log(clicked_cycle)
+				make_nodes(clicked_cycle);
+			};
+    	})
+});
+
+function remove_nodes(circles){
+		svg.selectAll("circle").transition()
+			.duration(1000)
+     		.attr("cx", 2*w)
+			.remove();
+}
+
+function make_nodes(cycle){
+	//cycle = cycle || "14";
+	var nodes_to_plot = [];
+	console.log(nodes.length)
 	for (var i = 0; i < nodes.length; i++) {
-		if (nodes[i]['cycle'] === "12") { // check against selected cycles here
-		//console.log(nodes[i]['cycle']);
+		if (nodes[i]['cycle'] === cycle) { // check against selected cycles here
 			nodes_to_plot.push(nodes[i]); 
 		};
+		//console.log(cycle);
 	};
 
-	//console.log(nodes_to_plot);
-
-	circles = svg.selectAll("circle")
+	var circles = svg.selectAll("circle")
 				.data(nodes_to_plot);
 
 	circles.enter().append("circle")
@@ -105,42 +134,42 @@ d3.json("/assets/nodeData.json", function(error, data) {
     circles.on("mouseover", function(d) {
           var xPosition = d.x;
           var yPosition = d.y;
-          //Create the tooltip label
           d3.select("#tooltip")
             .style("left", xPosition+radius_scale(d['time']) + "px")
             .style("top", yPosition + "px")
-          //d3.select("#hbar").attr("fill", fill_color(d['category']))
           d3.select("#prop_num").text(d['proposal_number'])
           d3.select("#pi").text(d['last'])
           d3.select("#title").text(d['title'])
           d3.select("#time").text(d['time'])
           d3.select("#type").text(d['type'])
           d3.select("#category").text(d['category']);
-          //Show the tooltip
           d3.select("#tooltip").classed("hidden", false);
          })
         .on("mouseout", function() {
-          //Hide the tooltip
           d3.select("#tooltip").classed("hidden", true);
         });
 
-    circles.transition().duration(2000).attr("r", function(d){return radius_scale(d['time']);});
-    start();
-    display_group_all();
-});
+    circles.transition().duration(2000).attr("r", function(d){return radius_scale(d['time']);});	
+	
+			    start(nodes_to_plot);
+			    display_group_all(circles);
+
+
+}
+
 
 function charge(d) {
 	return -Math.pow(radius_scale(d['time']), 2/1.06);
 }
 
-function start() {
+function start(nodes_to_plot) {
 	//console.log("start")
     force = d3.layout.force()
-            .nodes(nodes)
+            .nodes(nodes_to_plot)
             .size([w, h]);
 }
 
-function display_group_all() {
+function display_group_all(circles) {
 	force.gravity(layout_gravity)
 	     .charge(charge)
 	     .friction(0.8)
