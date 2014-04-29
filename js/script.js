@@ -396,10 +396,7 @@ function remove_nodes() {
 }
 
 function make_nodes(currentCycle) {
-  var nodes = chandraData;
-
-
-  var time_range = d3.extent(nodes.cycles[currentCycle], function(d) {
+  var time_range = d3.extent(chandraData.cycles[currentCycle], function(d) {
     return (parseInt(d.approved_exposure_time));
   });
   var radius_scale = d3.scale.linear().domain(time_range).range([3,35]);
@@ -414,7 +411,7 @@ function make_nodes(currentCycle) {
       d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
     }
   }
-       console.log(nodes.cycles[currentCycle].length);
+       console.log(chandraData.cycles[currentCycle].length);
 
   var count =0;
   var counter = function() {
@@ -422,7 +419,7 @@ function make_nodes(currentCycle) {
     return 'circle';
   }
   var circles = cycleSvg.selectAll('circle')
-        .data(nodes.cycles[currentCycle])
+        .data(chandraData.cycles[currentCycle])
         .enter()
         .append('circle')
         .attr('r',0)
@@ -449,7 +446,7 @@ console.log(count);
         });
 
   var force = d3.layout.force()
-        .nodes(nodes.cycles[currentCycle])
+        .nodes(chandraData.cycles[currentCycle])
         .size([cycle.width,cycle.height]);
 
 
