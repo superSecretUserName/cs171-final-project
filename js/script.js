@@ -411,10 +411,22 @@ function make_nodes(currentCycle) {
         .attr('r',0)
         .attr('fill', function(d) { return fill_color(d.category_descrip)})
         .attr('stroke-width', 1.5)
-        .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();});
+        .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
+        .on('mouseover',function(d) {
+
+          console.log(d.proposal_number);
+
+          d3.select('#tooltip')
+                .style('left', d.x + radius_scale(d.approved_exposure_time) + 'px')
+                .style('top', d.y + 'px')
+          d3.select('#prop_num').text(d.proposal_number);
+        })
+        .on('mouseout', function() {
+          d3.select('#tooltip').classed('hidden', true);
+        });
 
   circles.transition()
-        .duration(2000)
+        .duration(1000)
         .attr('r', function(d) {
           return radius_scale(d.approved_exposure_time);
         });
@@ -428,6 +440,13 @@ function make_nodes(currentCycle) {
         .charge(charge)
         .friction(friction)
         .on('tick', function(e) {
+          // this is to force them to settle sooner.
+          // tooltips aren't viewable until the force has stopped,
+          // this is usually when force.alpha() == 0;
+          console.log(force.alpha());
+          if (force.alpha() < .035) {
+            force.stop();
+          }
           circles.each(move_towards_center(e.alpha))
                 .attr('cx', function(d) { return d.x;})
                 .attr('cy', function(d) { return d.y;});
