@@ -391,7 +391,7 @@ function make_nodes(currentCycle) {
   var time_range = d3.extent(nodes.cycles[currentCycle], function(d) {
     return (parseInt(d.approved_exposure_time));
   });
-  var radius_scale = d3.scale.linear().domain(time_range).range([3,100]);
+  var radius_scale = d3.scale.linear().domain(time_range).range([3,35]);
 
   var charge = function(d) {
     return -Math.pow(radius_scale(d.approved_exposure_time), 2/1.06);
@@ -444,7 +444,7 @@ function make_nodes(currentCycle) {
           // tooltips aren't viewable until the force has stopped,
           // this is usually when force.alpha() == 0;
           console.log(force.alpha());
-          if (force.alpha() < .035) {
+          if (force.alpha() < .045) {
             force.stop();
           }
           circles.each(move_towards_center(e.alpha))
