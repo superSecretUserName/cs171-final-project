@@ -253,6 +253,8 @@ var loadObservationData = function(){
 		}
 		observationData = data;
 		buildStarMap();
+
+    build_bubble_chart();
 	});
 }
 
@@ -335,5 +337,97 @@ var zoomOut = controls.append('div')
 /* ****
 Add Katy JS below here
 * *****/
+
+var vis, force, radius_scale;
+
+var fill_color = d3.scale.ordinal()
+      .domain(["STARS AND WD",
+        "GALACTIC DIFFUSE EMISSION AND SURVEYS",
+        "WD BINARIES AND CV",
+        "BH AND NS BINARIES",
+        "SN, SNR AND ISOLATED NS",
+        "NORMAL GALAXIES: DIFFUSE EMISSION",
+        "NORMAL GALAXIES: X-RAY POPULATIONS",
+        "ACTIVE GALAXIES AND QUASARS",
+        "CLUSTERS OF GALAXIES",
+        "EXTRAGALACTIC DIFFUSE EMISSION AND SURVEYS",
+        "GALACTIC DIFFUSE EMISSION AND SURVEYS",
+        "SOLAR SYSTEM"])
+      .range(["#66c2a4",
+        "#8c96c6",
+        "#7bccc4",
+        "#fc8d59",
+        "#74a9cf",
+        "#67a9cf",
+        "#df65b0",
+        "#78c679",
+        "#41b6c4",
+        "#fe9929",
+        "#fd8d3c",
+        "#f768a1"]);
+
+
+function build_bubble_chart() {
+  var cycle = 1;
+
+  var nodes = chandraData;
+  // get min/max time of a given cycle
+
+  make_nodes(1);
+
+
+
+
+}
+
+var layout_gravity = -0.1;
+var damper = 0.5;
+var friction = 0.8;
+
+
+function make_nodes(cycle) {
+  var nodes = chandraData;
+
+
+  var time_range = d3.extent(nodes.cycles[cycle], function(d) {
+    return (parseInt(d.approved_exposure_time));
+  });
+  var radius_scale = d3.scale.linear().domain(time_range).range([3,100]);
+
+  var charge = function(d) {
+    return -Math.pow(radius_scale(d.approved_exposure_time), 2/1.06);
+  }
+
+  var circles = cycleSvg.selectAll('circle')
+        .data(nodes.cycles[cycle])
+        .enter()
+        .append('circle')
+        .attr('r',0)
+        .attr('fill', function(d) { return fill_color(d.category_descrip)})
+        .attr('stroke-width', 1.5)
+        .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();});
+
+  circles.transition()
+        .duration(2000)
+        .attr('r', function(d) {
+          return radius_scale(d.approved_exposure_time);
+        });
+
+  var force = d3.layout.force()
+        .nodes(nodes.cycles[cycle])
+        .size([cycle.width,cycle.height]);
+
+  force.gravity(layout_gravity)
+        .charge(charge)
+        .friction(friction)
+        .on('tick', function(e) {
+          circles.each(move_towards_center(e.alpha))
+                .attr('cx', function(d) { return d.x;})
+                .attr('cy', function(d) { return d.y;});
+        });
+
+  force.start();
+
+}
 
 

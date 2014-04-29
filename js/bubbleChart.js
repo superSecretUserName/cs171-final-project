@@ -84,7 +84,7 @@ d3.json("/assets/nodeData.json", function(error, data) {
     radius_scale = d3.scale.linear().domain(time_range).range([3, 160])
 
 	//find nodes to plot based on selected cycles
-
+  console.log(nodes);
 	//arrange_nodes();
 	// make_nodes("15");
  //    start();
