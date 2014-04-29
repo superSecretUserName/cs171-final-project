@@ -368,7 +368,6 @@ var fill_color = d3.scale.ordinal()
 
 
 function build_bubble_chart() {
-  var cycle = 1;
 
   var nodes = chandraData;
   // get min/max time of a given cycle
@@ -383,13 +382,13 @@ function build_bubble_chart() {
 var layout_gravity = -0.1;
 var damper = 0.5;
 var friction = 0.8;
+var center = {x: cycle.width /2, y: cycle.height /2};
 
-
-function make_nodes(cycle) {
+function make_nodes(currentCycle) {
   var nodes = chandraData;
 
 
-  var time_range = d3.extent(nodes.cycles[cycle], function(d) {
+  var time_range = d3.extent(nodes.cycles[currentCycle], function(d) {
     return (parseInt(d.approved_exposure_time));
   });
   var radius_scale = d3.scale.linear().domain(time_range).range([3,100]);
@@ -398,8 +397,15 @@ function make_nodes(cycle) {
     return -Math.pow(radius_scale(d.approved_exposure_time), 2/1.06);
   }
 
+  var move_towards_center = function (alpha) {
+    return function(d) {
+      d.x = d.x + (center.x - d.x) * (damper + 0.02) * alpha;
+      d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
+    }
+  }
+
   var circles = cycleSvg.selectAll('circle')
-        .data(nodes.cycles[cycle])
+        .data(nodes.cycles[currentCycle])
         .enter()
         .append('circle')
         .attr('r',0)
@@ -414,8 +420,10 @@ function make_nodes(cycle) {
         });
 
   var force = d3.layout.force()
-        .nodes(nodes.cycles[cycle])
+        .nodes(nodes.cycles[currentCycle])
         .size([cycle.width,cycle.height]);
+
+  console.log(cycle.width);
 
   force.gravity(layout_gravity)
         .charge(charge)
@@ -426,7 +434,7 @@ function make_nodes(cycle) {
                 .attr('cy', function(d) { return d.y;});
         });
 
-  force.start();
+ // force.start();
 
 }
 
