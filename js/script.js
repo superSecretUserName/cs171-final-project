@@ -385,7 +385,11 @@ var friction = 0.8;
 var center = {x: cycle.width /2, y: cycle.height /2};
 
 function remove_nodes() {
-  cycleSvg.selectAll
+  cycleSvg.selectAll('circle')
+        .transition()
+        .duration(1000)
+        .attr('cx', 2 * cycle.width)
+        .remove();
 }
 
 function make_nodes(currentCycle) {
@@ -414,7 +418,7 @@ function make_nodes(currentCycle) {
         .append('circle')
         .attr('r',0)
         .attr('fill', function(d) { return fill_color(d.category_descrip)})
-        .attr('stroke-width', 1.5)
+        .attr('stroke-width', 0)
         .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
         .on('mouseover',function(d) {
 
