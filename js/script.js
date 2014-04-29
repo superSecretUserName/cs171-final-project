@@ -341,30 +341,19 @@ Add Katy JS below here
 var vis, force, radius_scale;
 
 var fill_color = d3.scale.ordinal()
-      .domain(["STARS AND WD",
-        "GALACTIC DIFFUSE EMISSION AND SURVEYS",
-        "WD BINARIES AND CV",
-        "BH AND NS BINARIES",
-        "SN, SNR AND ISOLATED NS",
-        "NORMAL GALAXIES: DIFFUSE EMISSION",
-        "NORMAL GALAXIES: X-RAY POPULATIONS",
-        "ACTIVE GALAXIES AND QUASARS",
-        "CLUSTERS OF GALAXIES",
-        "EXTRAGALACTIC DIFFUSE EMISSION AND SURVEYS",
-        "GALACTIC DIFFUSE EMISSION AND SURVEYS",
-        "SOLAR SYSTEM"])
-      .range(["#66c2a4",
-        "#8c96c6",
-        "#7bccc4",
-        "#fc8d59",
-        "#74a9cf",
-        "#67a9cf",
-        "#df65b0",
-        "#78c679",
-        "#41b6c4",
-        "#fe9929",
-        "#fd8d3c",
-        "#f768a1"]);
+    .domain(['STARS AND WD',
+      'GALACTIC DIFFUSE EMISSION AND SURVEYS',
+      'WD BINARIES AND CV',
+      'BH AND NS BINARIES',
+      'SN, SNR AND ISOLATED NS',
+      'NORMAL GALAXIES: DIFFUSE EMISSION',
+      'NORMAL GALAXIES: X-RAY POPULATIONS',
+      'ACTIVE GALAXIES AND QUASARS',
+      'CLUSTERS OF GALAXIES',
+      'EXTRAGALACTIC DIFFUSE EMISSION AND SURVEYS',
+      'GALACTIC DIFFUSE EMISSION AND SURVEYS',
+      'SOLAR SYSTEM'])
+    .range(['#66c2a4','#8c96c6','#7bccc4','#fc8d59','#74a9cf','#67a9cf','#df65b0','#78c679','#41b6c4','#fe9929','#fd8d3c','#f768a1']);
 
 
 function build_bubble_chart() {
@@ -411,7 +400,8 @@ function make_nodes(currentCycle) {
       d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
     }
   }
-       console.log(chandraData.cycles[currentCycle].length);
+  
+  //console.log(chandraData.cycles[currentCycle].length);
 
   var count =0;
   var counter = function() {
@@ -430,7 +420,7 @@ function make_nodes(currentCycle) {
         .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
         .on('mouseover',function(d) {
 
-          console.log(d.proposal_number);
+          //console.log(d.proposal_number);
 
           d3.select('#tooltip');
           d3.select('#prop_num').text(d.proposal_number);
@@ -438,7 +428,7 @@ function make_nodes(currentCycle) {
         .on('mouseout', function() {
           d3.select('#tooltip').classed('hidden', true);
         });
-console.log(count);
+//console.log(count);
   circles.transition()
         .duration(1000)
         .attr('r', function(d) {
