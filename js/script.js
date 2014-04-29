@@ -368,26 +368,29 @@ var fill_color = d3.scale.ordinal()
 
 
 function build_bubble_chart() {
-
-  var nodes = chandraData;
-  // get min/max time of a given cycle
-
   make_nodes(1);
-
-
-
-
 }
 
 var layout_gravity = -0.1;
 var damper = 0.5;
 var friction = 0.8;
 var center = {x: cycle.width /2, y: cycle.height /2};
+var drawTime = 750;
+
+function redraw_nodes(currentCycle) {
+
+  remove_nodes();
+  //setTimeout(function() {
+    make_nodes(currentCycle);//}, drawTime + 100
+  //);
+
+}
+
 
 function remove_nodes() {
   cycleSvg.selectAll('circle')
         .transition()
-        .duration(1000)
+        .duration(drawTime)
         .attr('cx', 2 * cycle.width)
         .remove();
 }
@@ -411,28 +414,34 @@ function make_nodes(currentCycle) {
       d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
     }
   }
+       console.log(nodes.cycles[currentCycle].length);
 
+  var count =0;
+  var counter = function() {
+    count++;
+    return 'circle';
+  }
   var circles = cycleSvg.selectAll('circle')
         .data(nodes.cycles[currentCycle])
         .enter()
         .append('circle')
         .attr('r',0)
-        .attr('fill', function(d) { return fill_color(d.category_descrip)})
+        .attr('fill', function(d) {
+          count++;
+          return fill_color(d.category_descrip)})
         .attr('stroke-width', 0)
         .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
         .on('mouseover',function(d) {
 
           console.log(d.proposal_number);
 
-          d3.select('#tooltip')
-                .style('left', d.x + radius_scale(d.approved_exposure_time) + 'px')
-                .style('top', d.y + 'px')
+          d3.select('#tooltip');
           d3.select('#prop_num').text(d.proposal_number);
         })
         .on('mouseout', function() {
           d3.select('#tooltip').classed('hidden', true);
         });
-
+console.log(count);
   circles.transition()
         .duration(1000)
         .attr('r', function(d) {
@@ -451,7 +460,6 @@ function make_nodes(currentCycle) {
           // this is to force them to settle sooner.
           // tooltips aren't viewable until the force has stopped,
           // this is usually when force.alpha() == 0;
-          console.log(force.alpha());
           if (force.alpha() < .045) {
             force.stop();
           }
