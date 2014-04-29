@@ -423,7 +423,6 @@ function make_nodes(currentCycle) {
         .nodes(nodes.cycles[currentCycle])
         .size([cycle.width,cycle.height]);
 
-  console.log(cycle.width);
 
   force.gravity(layout_gravity)
         .charge(charge)
@@ -434,7 +433,7 @@ function make_nodes(currentCycle) {
                 .attr('cy', function(d) { return d.y;});
         });
 
- // force.start();
+  force.start();
 
 }
 
