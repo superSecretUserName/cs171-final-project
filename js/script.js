@@ -384,6 +384,10 @@ var damper = 0.5;
 var friction = 0.8;
 var center = {x: cycle.width /2, y: cycle.height /2};
 
+function remove_nodes() {
+  cycleSvg.selectAll
+}
+
 function make_nodes(currentCycle) {
   var nodes = chandraData;
 
