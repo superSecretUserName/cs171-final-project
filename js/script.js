@@ -351,11 +351,11 @@ function make_nodes(currentCycle) {
           d3.select('#tooltip-target')
                 .text(d['targname']);
           d3.select('#tooltip-prop-num')
-                .text(d['proposal-number']);
+                .text(d['proposal_number']);
           d3.select('#tooltip-pi')
                 .text(d['last']);
           d3.select('#tooltip-category')
-                .text(d['category-descrip']);
+                .text(d['category_descrip']);
           d3.select('#tooltip-time')
                 .text(d['approved_exposure_time']);
           d3.select('#tooltip-abstract')
@@ -368,7 +368,20 @@ function make_nodes(currentCycle) {
         })
         .on('mouseout', function() {
           d3.select('#tooltip').classed('hidden', true);
+        })
+        .on('click', function(d){
+          var currentCycle = d.proposal_number.substring(0, 2);
+          if (currentCycle.length == 1) {
+            currentCycle = '0' + currentCycle;
+          }
+          d3.selectAll('.star-point.cycle-' + currentCycle)
+                .style('fill', 'red')
+
+          console.log(currentCycle);
         });
+
+
+
 //console.log(count);
   circles.transition()
         .duration(1000)
@@ -432,11 +445,11 @@ var buildStarMap = function(){
         d3.select('#tooltip-target')
           .text(proposal_data['targname']);
         d3.select('#tooltip-prop-num')
-          .text(proposal_data['proposal-number']);
+          .text(proposal_data['proposal_number']);
         d3.select('#tooltip-pi')
         	.text(proposal_data['last']);
         d3.select('#tooltip-category')
-        	.text(proposal_data['category-descrip']);
+        	.text(proposal_data['category_descrip']);
         d3.select('#tooltip-time')
         	.text(proposal_data['approved_exposure_time']);
         d3.select('#tooltip-abstract')
@@ -447,7 +460,9 @@ var buildStarMap = function(){
         d3.select('#tooltip').classed('hidden', true);
 			})
 			.on('click', function(d){
-				var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
+				d3.selectAll('.star-point')
+              .style('fill', '#e3d326');
+        var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
 				if (newCycle == currentStarCycle) return;
 				redraw_nodes(newCycle);
 			});
