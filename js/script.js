@@ -300,7 +300,7 @@ function redraw_nodes(currentCycle) {
 var cycleName = cycleSvg.append('foreignObject')
     .attr('width',200)
     .attr('height',20)
-  	.classed('foreign-object-controls', true)
+  	.classed('foreign-object-cyclename', true)
     .append("xhtml:body")
     .append('div')
     .classed('cycle-name', true);
@@ -448,6 +448,7 @@ var controls = starSvg.append('foreignObject')
     .append("xhtml:body")
     .append('div')
     .classed('controls', true);
+
 var buildStars = function(newScale){
 	starProjection.scale(newScale);
 	starPaths.attr('d', starPath);
