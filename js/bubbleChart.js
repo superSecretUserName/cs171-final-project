@@ -146,10 +146,10 @@ function make_nodes(cycle){
           d3.select("#time").text(d['time'])
           d3.select("#type").text(d['type']);
           d3.select("#hbar")
-            .attr("fill", function(d) { 
+            .style("background-color", function(d) { 
               console.log("d is currently: " + d);
-              //return fill_color(d['category']) ;
-              return "blue";
+              return fill_color(d['category']) ;
+              //return "blue";
             });
           d3.select("#category").text(d['category'])
           d3.select("#tooltip").classed("hidden", false);
