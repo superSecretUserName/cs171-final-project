@@ -1,7 +1,7 @@
 /**
  * Created by consensus on 4/6/14.
  */
-var worldData, chandraData, observationData, globePaths, rotating, currentScale = 800, m0, m1, delta = [],c0 = [0,0];
+var worldData, chandraData, observationData, globePaths, rotating, currentStarCycle, currentScale = 800, m0, m1, delta = [],c0 = [0,0];
 
 var world = {width:200,height:200,scale:100}
 var star = {width:900, height:480, scale: currentScale}
@@ -258,6 +258,139 @@ var loadObservationData = function(){
 	});
 }
 
+/* ****
+Add Katy JS below here
+* *****/
+
+var vis, force, radius_scale;
+
+var fill_color = d3.scale.ordinal()
+    .domain(['STARS AND WD',
+      'GALACTIC DIFFUSE EMISSION AND SURVEYS',
+      'WD BINARIES AND CV',
+      'BH AND NS BINARIES',
+      'SN, SNR AND ISOLATED NS',
+      'NORMAL GALAXIES: DIFFUSE EMISSION',
+      'NORMAL GALAXIES: X-RAY POPULATIONS',
+      'ACTIVE GALAXIES AND QUASARS',
+      'CLUSTERS OF GALAXIES',
+      'EXTRAGALACTIC DIFFUSE EMISSION AND SURVEYS',
+      'GALACTIC DIFFUSE EMISSION AND SURVEYS',
+      'SOLAR SYSTEM'])
+    .range(['#66c2a4','#8c96c6','#7bccc4','#fc8d59','#74a9cf','#67a9cf','#df65b0','#78c679','#41b6c4','#fe9929','#fd8d3c','#f768a1']);
+
+
+function build_bubble_chart() {
+  make_nodes(1);
+}
+
+var layout_gravity = -0.1;
+var damper = 0.5;
+var friction = 0.8;
+var center = {x: cycle.width /2, y: cycle.height /2};
+var drawTime = 750;
+
+function redraw_nodes(currentCycle) {
+  remove_nodes();
+  setTimeout(function() {
+   	make_nodes(currentCycle);
+  }, drawTime + 100);
+}
+
+var cycleName = cycleSvg.append('foreignObject')
+    .attr('width',200)
+    .attr('height',20)
+  	.classed('foreign-object-controls', true)
+    .append("xhtml:body")
+    .append('div')
+    .classed('cycle-name', true);
+
+function make_nodes(currentCycle) {
+	currentStarCycle = currentCycle;
+	cycleName.text('current cycle:'+ currentStarCycle);
+  var time_range = d3.extent(chandraData.cycles[currentCycle], function(d) {
+    return (parseInt(d.approved_exposure_time));
+  });
+  var radius_scale = d3.scale.linear().domain(time_range).range([3,35]);
+
+  var charge = function(d) {
+    return -Math.pow(radius_scale(d.approved_exposure_time), 2/1.06);
+  }
+
+  var move_towards_center = function (alpha) {
+    return function(d) {
+      d.x = d.x + (center.x - d.x) * (damper + 0.02) * alpha;
+      d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
+    }
+  }
+  
+  //console.log(chandraData.cycles[currentCycle].length);
+
+  var count =0;
+  var counter = function() {
+    count++;
+    return 'circle';
+  }
+  var circles = cycleSvg.selectAll('circle')
+        .data(chandraData.cycles[currentCycle])
+        .enter()
+        .append('circle')
+        .attr('r',0)
+        .attr('fill', function(d) {
+          count++;
+          return fill_color(d.category_descrip)})
+        .attr('stroke-width', 0)
+        .attr('class',function(d){
+        	return 'cycle-'+currentCycle;
+        })
+        .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
+        .on('mouseover',function(d) {
+
+          //console.log(d.proposal_number);
+
+          d3.select('#tooltip');
+          d3.select('#prop_num').text(d.proposal_number);
+        })
+        .on('mouseout', function() {
+          d3.select('#tooltip').classed('hidden', true);
+        });
+//console.log(count);
+  circles.transition()
+        .duration(1000)
+        .attr('r', function(d) {
+          return radius_scale(d.approved_exposure_time);
+        });
+
+  var force = d3.layout.force()
+        .nodes(chandraData.cycles[currentCycle])
+        .size([cycle.width,cycle.height]);
+
+  force.gravity(layout_gravity)
+        .charge(charge)
+        .friction(friction)
+        .on('tick', function(e) {
+          // this is to force them to settle sooner.
+          // tooltips aren't viewable until the force has stopped,
+          // this is usually when force.alpha() == 0;
+          if (force.alpha() < .045) {
+            force.stop();
+          }
+          circles.each(move_towards_center(e.alpha))
+                .attr('cx', function(d) { return d.x;})
+                .attr('cy', function(d) { return d.y;});
+        });
+
+  force.start();
+}
+
+function remove_nodes() {
+  cycleSvg.selectAll('circle')
+        .transition()
+        .duration(drawTime)
+        .attr('cx', 2 * cycle.width)
+        .remove();
+}
+
 var buildStarMap = function(){
 	console.log(chandraData);
 	//console.log(observationData);
@@ -267,9 +400,13 @@ var buildStarMap = function(){
 			.data(chandraData.geoCoords)
 			.enter()
 			.append('svg:path')
-			.attr('class', function(d){
-				//console.log(d);
-				return 'star-point';
+			.attr('class', function(d,i){
+				var addClass = 'star-point';
+				var cycle = d.properties.proposal_number.substring(0, 2);
+				if (cycle.length == 2) {
+					addClass +=' cycle-'+cycle;
+				}
+				return addClass;
 			})
 			.attr('d', starPath)
 			.on('mouseover', function(d){
@@ -290,13 +427,15 @@ var buildStarMap = function(){
         d3.select('#tooltip-abstract')
         	.text(proposal_data['abstract']);
         d3.select('#tooltip').classed('hidden', false);
-				//console.log('test mouse over');
 			})
 			.on('mouseout', function(d){
-				//console.log(d);
-				//console.log('mouse out');
         d3.select('#tooltip').classed('hidden', true);
 			})
+			.on('click', function(d){
+				var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
+				if (newCycle == currentStarCycle) return;
+				redraw_nodes(newCycle);
+			});
 
 	starPaths = starSvg.selectAll('path');
 }
@@ -333,130 +472,4 @@ var zoomOut = controls.append('div')
     .classed('scale-down', true)
     .text('-')
     .on('click', scaleDown);
-
-/* ****
-Add Katy JS below here
-* *****/
-
-var vis, force, radius_scale;
-
-var fill_color = d3.scale.ordinal()
-    .domain(['STARS AND WD',
-      'GALACTIC DIFFUSE EMISSION AND SURVEYS',
-      'WD BINARIES AND CV',
-      'BH AND NS BINARIES',
-      'SN, SNR AND ISOLATED NS',
-      'NORMAL GALAXIES: DIFFUSE EMISSION',
-      'NORMAL GALAXIES: X-RAY POPULATIONS',
-      'ACTIVE GALAXIES AND QUASARS',
-      'CLUSTERS OF GALAXIES',
-      'EXTRAGALACTIC DIFFUSE EMISSION AND SURVEYS',
-      'GALACTIC DIFFUSE EMISSION AND SURVEYS',
-      'SOLAR SYSTEM'])
-    .range(['#66c2a4','#8c96c6','#7bccc4','#fc8d59','#74a9cf','#67a9cf','#df65b0','#78c679','#41b6c4','#fe9929','#fd8d3c','#f768a1']);
-
-
-function build_bubble_chart() {
-  make_nodes(1);
-}
-
-var layout_gravity = -0.1;
-var damper = 0.5;
-var friction = 0.8;
-var center = {x: cycle.width /2, y: cycle.height /2};
-var drawTime = 750;
-
-function redraw_nodes(currentCycle) {
-
-  remove_nodes();
-  //setTimeout(function() {
-    make_nodes(currentCycle);//}, drawTime + 100
-  //);
-
-}
-
-
-function remove_nodes() {
-  cycleSvg.selectAll('circle')
-        .transition()
-        .duration(drawTime)
-        .attr('cx', 2 * cycle.width)
-        .remove();
-}
-
-function make_nodes(currentCycle) {
-  var time_range = d3.extent(chandraData.cycles[currentCycle], function(d) {
-    return (parseInt(d.approved_exposure_time));
-  });
-  var radius_scale = d3.scale.linear().domain(time_range).range([3,35]);
-
-  var charge = function(d) {
-    return -Math.pow(radius_scale(d.approved_exposure_time), 2/1.06);
-  }
-
-  var move_towards_center = function (alpha) {
-    return function(d) {
-      d.x = d.x + (center.x - d.x) * (damper + 0.02) * alpha;
-      d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
-    }
-  }
-  
-  //console.log(chandraData.cycles[currentCycle].length);
-
-  var count =0;
-  var counter = function() {
-    count++;
-    return 'circle';
-  }
-  var circles = cycleSvg.selectAll('circle')
-        .data(chandraData.cycles[currentCycle])
-        .enter()
-        .append('circle')
-        .attr('r',0)
-        .attr('fill', function(d) {
-          count++;
-          return fill_color(d.category_descrip)})
-        .attr('stroke-width', 0)
-        .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
-        .on('mouseover',function(d) {
-
-          //console.log(d.proposal_number);
-
-          d3.select('#tooltip');
-          d3.select('#prop_num').text(d.proposal_number);
-        })
-        .on('mouseout', function() {
-          d3.select('#tooltip').classed('hidden', true);
-        });
-//console.log(count);
-  circles.transition()
-        .duration(1000)
-        .attr('r', function(d) {
-          return radius_scale(d.approved_exposure_time);
-        });
-
-  var force = d3.layout.force()
-        .nodes(chandraData.cycles[currentCycle])
-        .size([cycle.width,cycle.height]);
-
-
-  force.gravity(layout_gravity)
-        .charge(charge)
-        .friction(friction)
-        .on('tick', function(e) {
-          // this is to force them to settle sooner.
-          // tooltips aren't viewable until the force has stopped,
-          // this is usually when force.alpha() == 0;
-          if (force.alpha() < .045) {
-            force.stop();
-          }
-          circles.each(move_towards_center(e.alpha))
-                .attr('cx', function(d) { return d.x;})
-                .attr('cy', function(d) { return d.y;});
-        });
-
-  force.start();
-
-}
-
 
