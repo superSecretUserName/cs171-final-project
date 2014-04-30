@@ -83,8 +83,10 @@ d3.json("/assets/nodeData.json", function(error, data) {
 	var time_range = d3.extent(nodes, function(d){return d['time'];})
     radius_scale = d3.scale.linear().domain(time_range).range([3, 160])
 
+    current_cycle = "15";
+    make_nodes(current_cycle);
 	//find nodes to plot based on selected cycles
-  console.log(nodes);
+  //console.log(nodes);
 	//arrange_nodes();
 	// make_nodes("15");
  //    start();
@@ -93,14 +95,14 @@ d3.json("/assets/nodeData.json", function(error, data) {
     d3.selectAll("button")
     	.on("click", function(){
 			var buttonID = d3.select(this).attr("id")
-			if (buttonID == "remove") {
-    			remove_nodes();
-			}else{
-				var clicked_cycle = buttonID.substring(5,7)
+			       //if (buttonID == "remove") {
+    	remove_nodes();
+			       //}else{
+			var clicked_cycle = buttonID.substring(5,7)
 	    		//console.log("click1!")
-	    		console.log(clicked_cycle)
-				make_nodes(clicked_cycle);
-			};
+	    console.log(clicked_cycle)
+			make_nodes(clicked_cycle);
+			//};
     	})
 });
 
@@ -109,6 +111,7 @@ function remove_nodes(circles){
 			.duration(1000)
      		.attr("cx", 2*w)
 			.remove();
+      nodes_to_plot = [];
 }
 
 function make_nodes(cycle){
@@ -141,15 +144,21 @@ function make_nodes(cycle){
           d3.select("#pi").text(d['last'])
           d3.select("#title").text(d['title'])
           d3.select("#time").text(d['time'])
-          d3.select("#type").text(d['type'])
-          d3.select("#category").text(d['category']);
+          d3.select("#type").text(d['type']);
+          d3.select("#hbar")
+            .attr("fill", function(d) { 
+              console.log("d is currently: " + d);
+              //return fill_color(d['category']) ;
+              return "blue";
+            });
+          d3.select("#category").text(d['category'])
           d3.select("#tooltip").classed("hidden", false);
          })
         .on("mouseout", function() {
           d3.select("#tooltip").classed("hidden", true);
         });
 
-    circles.transition().duration(2000).attr("r", function(d){return radius_scale(d['time']);});	
+    circles.transition().delay(0).duration(2000).attr("r", function(d){return radius_scale(d['time']);});	
 	
 			    start(nodes_to_plot);
 			    display_group_all(circles);
