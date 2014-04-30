@@ -126,9 +126,9 @@ function make_nodes(cycle){
 	};
 
 	var circles = svg.selectAll("circle")
-				.data(nodes_to_plot);
-
-	circles.enter().append("circle")
+				.data(nodes_to_plot)
+        .enter()
+        .append("circle")
       	.attr("r", 0)
       	.attr("fill", function(d) { return fill_color(d['category']) ;})
       	.attr("stroke-width", 1.5)
@@ -145,12 +145,13 @@ function make_nodes(cycle){
           d3.select("#title").text(d['title'])
           d3.select("#time").text(d['time'])
           d3.select("#type").text(d['type']);
+
           d3.select("#hbar")
-            .style("background-color", function(d) { 
-              console.log("d is currently: " + d);
+            .style("background-color", function() {
+              console.log(d);
               return fill_color(d['category']) ;
-              //return "blue";
             });
+
           d3.select("#category").text(d['category'])
           d3.select("#tooltip").classed("hidden", false);
          })

@@ -7,6 +7,12 @@ var world = {width:200,height:200,scale:100}
 var star = {width:900, height:480, scale: currentScale}
 var cycle = {width: 400, height:700}
 
+var all_times = [];
+
+
+
+
+
 // cycles svg
 
 // world svg
@@ -281,6 +287,16 @@ var fill_color = d3.scale.ordinal()
 
 
 function build_bubble_chart() {
+
+  for (var key in chandraData.nameKey) {
+    all_times.push(parseInt(chandraData.nameKey[key].approved_exposure_time));
+  }
+  console.log(all_times)
+  time_extent = d3.extent(all_times);
+  console.log(time_extent);
+
+//    all_times.push(chandraData.cycles[i].approved_exposure_time);
+//  console.log(all_times);
   make_nodes(1);
 }
 
@@ -311,7 +327,7 @@ function make_nodes(currentCycle) {
   var time_range = d3.extent(chandraData.cycles[currentCycle], function(d) {
     return (parseInt(d.approved_exposure_time));
   });
-  var radius_scale = d3.scale.linear().domain(time_range).range([3,35]);
+  radius_scale = d3.scale.linear().domain(time_extent).range([3,125]);
 
   var charge = function(d) {
     return -Math.pow(radius_scale(d.approved_exposure_time), 2/1.06);
@@ -345,15 +361,44 @@ function make_nodes(currentCycle) {
         })
         .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
         .on('mouseover',function(d) {
-
+          //console.log(proposal_data);
+          // var xPosition = d.coords[0];
+          // var yPosition = d.coords[1];
+          d3.select('#tooltip-target')
+                .text(d['targname']);
+          d3.select('#tooltip-prop-num')
+                .text(d['proposal_number']);
+          d3.select('#tooltip-pi')
+                .text(d['last']);
+          d3.select('#tooltip-category')
+                .text(d['category_descrip']);
+          d3.select('#tooltip-time')
+                .text(d['approved_exposure_time']);
+          d3.select('#tooltip-abstract')
+                .text(d['abstract']);
+          d3.select('#tooltip').classed('hidden', false);
           //console.log(d.proposal_number);
 
           d3.select('#tooltip');
           d3.select('#prop_num').text(d.proposal_number);
+
         })
         .on('mouseout', function() {
           d3.select('#tooltip').classed('hidden', true);
+        })
+        .on('click', function(d){
+          var currentCycle = d.proposal_number.substring(0, 2);
+          if (currentCycle.length == 1) {
+            currentCycle = '0' + currentCycle;
+          }
+          d3.selectAll('.star-point.cycle-' + currentCycle)
+                .style('fill', 'red')
+
+          console.log(currentCycle);
         });
+
+
+
 //console.log(count);
   circles.transition()
         .duration(1000)
@@ -417,13 +462,13 @@ var buildStarMap = function(){
         d3.select('#tooltip-target')
           .text(proposal_data['targname']);
         d3.select('#tooltip-prop-num')
-          .text(proposal_data['proposal-number']);
+          .text(proposal_data['proposal_number']);
         d3.select('#tooltip-pi')
         	.text(proposal_data['last']);
         d3.select('#tooltip-category')
-        	.text(proposal_data['category-descrip']);
+        	.text(proposal_data['category_descrip']);
         d3.select('#tooltip-time')
-        	.text(proposal_data['approved-time']);
+        	.text(proposal_data['approved_exposure_time']);
         d3.select('#tooltip-abstract')
         	.text(proposal_data['abstract']);
         d3.select('#tooltip').classed('hidden', false);
@@ -432,7 +477,9 @@ var buildStarMap = function(){
         d3.select('#tooltip').classed('hidden', true);
 			})
 			.on('click', function(d){
-				var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
+				d3.selectAll('.star-point')
+              .style('fill', '#e3d326');
+        var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
 				if (newCycle == currentStarCycle) return;
 				redraw_nodes(newCycle);
 			});
