@@ -365,6 +365,7 @@ function make_nodes(currentCycle) {
 
           d3.select('#tooltip');
           d3.select('#prop_num').text(d.proposal_number);
+
         })
         .on('mouseout', function() {
           d3.select('#tooltip').classed('hidden', true);
