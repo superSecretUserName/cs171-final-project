@@ -7,6 +7,12 @@ var world = {width:200,height:200,scale:100}
 var star = {width:900, height:480, scale: currentScale}
 var cycle = {width: 400, height:700}
 
+var all_times = [];
+
+
+
+
+
 // cycles svg
 
 // world svg
@@ -281,6 +287,16 @@ var fill_color = d3.scale.ordinal()
 
 
 function build_bubble_chart() {
+
+  for (var key in chandraData.nameKey) {
+    all_times.push(parseInt(chandraData.nameKey[key].approved_exposure_time));
+  }
+  console.log(all_times)
+  time_extent = d3.extent(all_times);
+  console.log(time_extent);
+
+//    all_times.push(chandraData.cycles[i].approved_exposure_time);
+//  console.log(all_times);
   make_nodes(1);
 }
 
@@ -311,7 +327,7 @@ function make_nodes(currentCycle) {
   var time_range = d3.extent(chandraData.cycles[currentCycle], function(d) {
     return (parseInt(d.approved_exposure_time));
   });
-  var radius_scale = d3.scale.linear().domain(time_range).range([3,35]);
+  radius_scale = d3.scale.linear().domain(time_extent).range([3,125]);
 
   var charge = function(d) {
     return -Math.pow(radius_scale(d.approved_exposure_time), 2/1.06);
