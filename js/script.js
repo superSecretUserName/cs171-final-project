@@ -345,7 +345,22 @@ function make_nodes(currentCycle) {
         })
         .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
         .on('mouseover',function(d) {
-
+          //console.log(proposal_data);
+          // var xPosition = d.coords[0];
+          // var yPosition = d.coords[1];
+          d3.select('#tooltip-target')
+                .text(d['targname']);
+          d3.select('#tooltip-prop-num')
+                .text(d['proposal-number']);
+          d3.select('#tooltip-pi')
+                .text(d['last']);
+          d3.select('#tooltip-category')
+                .text(d['category-descrip']);
+          d3.select('#tooltip-time')
+                .text(d['approved_exposure_time']);
+          d3.select('#tooltip-abstract')
+                .text(d['abstract']);
+          d3.select('#tooltip').classed('hidden', false);
           //console.log(d.proposal_number);
 
           d3.select('#tooltip');
@@ -423,7 +438,7 @@ var buildStarMap = function(){
         d3.select('#tooltip-category')
         	.text(proposal_data['category-descrip']);
         d3.select('#tooltip-time')
-        	.text(proposal_data['approved-time']);
+        	.text(proposal_data['approved_exposure_time']);
         d3.select('#tooltip-abstract')
         	.text(proposal_data['abstract']);
         d3.select('#tooltip').classed('hidden', false);
