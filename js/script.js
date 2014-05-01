@@ -480,6 +480,14 @@ var buildStarMap = function(){
 				d3.selectAll('.star-point')
               .style('fill', '#e3d326');
         var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
+          if (newCycle.toString().length == 1) {
+            newCycle = '0' + newCycle;
+          }
+          d3.selectAll('.star-point.cycle-' + newCycle)
+                .style('fill', 'red')
+
+          newCycle = parseInt(newCycle);
+
 				if (newCycle == currentStarCycle) return;
 				redraw_nodes(newCycle);
 			});
