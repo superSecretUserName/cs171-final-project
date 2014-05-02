@@ -485,9 +485,6 @@ function remove_nodes() {
 }
 
 var buildStarMap = function(){
-	console.log(chandraData);
-	//console.log(observationData);
-
 	// star points
 	var circles = starsGroup.selectAll('path')
 			.data(chandraData.geoCoords)
@@ -504,7 +501,6 @@ var buildStarMap = function(){
 			.attr('d', starPath)
 			.on('mouseover', function(d){
         var proposal_data = chandraData.nameKey[d['properties']['name']];
-				//console.log(proposal_data);
         // var xPosition = d.coords[0];
         // var yPosition = d.coords[1];
         d3.select('#tooltip-target')
