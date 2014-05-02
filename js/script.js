@@ -5,13 +5,33 @@ var worldData, chandraData, observationData, globePaths, rotating, currentStarCy
 
 var world = {width:200,height:200,scale:100}
 var star = {width:900, height:480, scale: currentScale}
-var cycle = {width: 400, height:700}
+var cycle = {width: 400, height:480}
 
 var all_times = [];
 
+// using spinjs to show loading activity 
+// citation source http://fgnass.github.io/spin.js/
 
-
-
+var spinOpts = {
+  lines: 12, // The number of lines to draw
+  length: 18, // The length of each line
+  width: 10, // The line thickness
+  radius: 20, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 0, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#fff', // #rgb or #rrggbb or array of colors
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: '480px', // Top position relative to parent
+  left: '470px' // Left position relative to parent
+};
+var spinTarget = document.getElementById('vis');
+var spinner = new Spinner(spinOpts).spin(spinTarget);
 
 // cycles svg
 
@@ -270,6 +290,15 @@ Add Katy JS below here
 
 var vis, force, radius_scale;
 
+var selectItem = cycleSvg.append('foreignObject')
+    .attr('width',402)
+    .attr('height',40)
+    .classed('select-cycle', true)
+    .append("xhtml:body")
+    .append('div')
+    .append('xhtml:select')
+    .attr('id','cycle-select');
+
 var fill_color = d3.scale.ordinal()
     .domain(['STARS AND WD',
       'GALACTIC DIFFUSE EMISSION AND SURVEYS',
@@ -285,19 +314,22 @@ var fill_color = d3.scale.ordinal()
       'SOLAR SYSTEM'])
     .range(['#66c2a4','#8c96c6','#7bccc4','#fc8d59','#74a9cf','#67a9cf','#df65b0','#78c679','#41b6c4','#fe9929','#fd8d3c','#f768a1']);
 
-
 function build_bubble_chart() {
-
   for (var key in chandraData.nameKey) {
     all_times.push(parseInt(chandraData.nameKey[key].approved_exposure_time));
   }
-  console.log(all_times)
   time_extent = d3.extent(all_times);
-  console.log(time_extent);
-
-//    all_times.push(chandraData.cycles[i].approved_exposure_time);
-//  console.log(all_times);
+  // all_times.push(chandraData.cycles[i].approved_exposure_time);
+  // console.log(all_times);
+  for (var i in chandraData.cycles) {
+    selectItem.append('xhtml:option').attr('value',i).text('Cycle '+ i);
+  }
   make_nodes(1);
+  selectItem.on('change',function(){
+    var selected = document.getElementById('cycle-select');
+    var value = selected.options[selected.selectedIndex].value;
+    redraw_nodes(value);
+  });
 }
 
 var layout_gravity = -0.1;
@@ -307,23 +339,29 @@ var center = {x: cycle.width /2, y: cycle.height /2};
 var drawTime = 750;
 
 function redraw_nodes(currentCycle) {
+  // set select
+  var selected = document.getElementById('cycle-select');
+  selected.value = currentCycle;
+  // remove nodes
   remove_nodes();
+  // timeout
   setTimeout(function() {
    	make_nodes(currentCycle);
   }, drawTime + 100);
 }
 
 var cycleName = cycleSvg.append('foreignObject')
-    .attr('width',200)
-    .attr('height',20)
+    .attr('width',402)
+    .attr('height',40)
   	.classed('foreign-object-cyclename', true)
     .append("xhtml:body")
     .append('div')
     .classed('cycle-name', true);
 
 function make_nodes(currentCycle) {
+
 	currentStarCycle = currentCycle;
-	cycleName.text('current cycle:'+ currentStarCycle);
+	cycleName.text('Current Cycle: '+ currentStarCycle);
   var time_range = d3.extent(chandraData.cycles[currentCycle], function(d) {
     return (parseInt(d.approved_exposure_time));
   });
@@ -347,6 +385,7 @@ function make_nodes(currentCycle) {
     count++;
     return 'circle';
   }
+
   var circles = cycleSvg.selectAll('circle')
         .data(chandraData.cycles[currentCycle])
         .enter()
@@ -356,10 +395,10 @@ function make_nodes(currentCycle) {
           count++;
           return fill_color(d.category_descrip)})
         .attr('stroke-width', 0)
-        .attr('class',function(d){
-        	return 'cycle-'+currentCycle;
+        .attr('class',function(d,i){
+        	return 'cycle-'+currentCycle + ' cycle-circle p-n-'+d.proposal_number;
         })
-        .attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
+        //.attr('stroke', function(d) {return d3.rgb(fill_color(d.category_descrip)).darker();})
         .on('mouseover',function(d) {
           //console.log(proposal_data);
           // var xPosition = d.coords[0];
@@ -382,22 +421,31 @@ function make_nodes(currentCycle) {
           d3.select('#tooltip');
           d3.select('#prop_num').text(d.proposal_number);
 
+          d3.selectAll('.s-p-'+d.proposal_number).style({
+            'stroke':'#fff',
+            'stroke-width': 2
+          });
         })
-        .on('mouseout', function() {
+        .on('mouseout', function(d) {
           d3.select('#tooltip').classed('hidden', true);
-        })
-        .on('click', function(d){
-          var currentCycle = d.proposal_number.substring(0, 2);
-          if (currentCycle.length == 1) {
-            currentCycle = '0' + currentCycle;
-          }
-          d3.selectAll('.star-point.cycle-' + currentCycle)
-                .style('fill', 'red')
-
-          console.log(currentCycle);
+          d3.selectAll('.s-p-'+d.proposal_number).style({
+            'stroke':'none',
+            'stroke-width': 0
+          });
         });
+        // .on('click', function(d){
+        //   var currentCycle = d.proposal_number.substring(0, 2);
+        //   if (currentCycle.length == 1) {
+        //     currentCycle = '0' + currentCycle;
+        //   }
+        //   d3.selectAll('.star-point.cycle-' + currentCycle)
+        //     .style('fill', function(d){
+        //       console.log(d);
+        //       return 'green';//fill_color(d.category_descrip);
+        //     });
 
-
+        //   console.log(currentCycle);
+        // });
 
 //console.log(count);
   circles.transition()
@@ -446,7 +494,7 @@ var buildStarMap = function(){
 			.enter()
 			.append('svg:path')
 			.attr('class', function(d,i){
-				var addClass = 'star-point';
+				var addClass = 'star-point s-p-'+d.properties.proposal_number;
 				var cycle = d.properties.proposal_number.substring(0, 2);
 				if (cycle.length == 2) {
 					addClass +=' cycle-'+cycle;
@@ -472,27 +520,50 @@ var buildStarMap = function(){
         d3.select('#tooltip-abstract')
         	.text(proposal_data['abstract']);
         d3.select('#tooltip').classed('hidden', false);
+
+        d3.selectAll('.cycle-circle').style({
+          'stroke':'none',
+          'stroke-width':0
+        });
+        d3.select('.p-n-'+d.properties.proposal_number).style({
+          'stroke':'white',
+          'stroke-width':2
+        });
 			})
 			.on('mouseout', function(d){
         d3.select('#tooltip').classed('hidden', true);
+        d3.selectAll('.cycle-circle').style({
+          'stroke':'none',
+          'stroke-width':0
+        });
 			})
 			.on('click', function(d){
-				d3.selectAll('.star-point')
-              .style('fill', '#e3d326');
-        var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
-          if (newCycle.toString().length == 1) {
-            newCycle = '0' + newCycle;
-          }
-          d3.selectAll('.star-point.cycle-' + newCycle)
-                .style('fill', 'red')
+        d3.selectAll('.star-point').style('fill','#e3d326');
 
-          newCycle = parseInt(newCycle);
+        d3.select(this).style({
+          'stroke': '#2657e3',
+          'stroke-width':2
+        });
+
+        var newCycle = parseInt(d.properties.proposal_number.substring(0, 2));
+        if (newCycle.toString().length == 1) {
+          newCycle = '0' + newCycle;
+        }
+        d3.selectAll('.star-point.cycle-' + newCycle)
+          .style('fill', function(d){
+            return 'purple';//fill_color(d.properties.category_descrip);
+          });
+
+        newCycle = parseInt(newCycle);
 
 				if (newCycle == currentStarCycle) return;
 				redraw_nodes(newCycle);
 			});
 
 	starPaths = starSvg.selectAll('path');
+
+  // remove spinner
+  d3.selectAll(".spinner").remove();
 }
 
 // scale controls
@@ -528,4 +599,6 @@ var zoomOut = controls.append('div')
     .classed('scale-down', true)
     .text('-')
     .on('click', scaleDown);
+
+
 

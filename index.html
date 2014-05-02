@@ -4,22 +4,27 @@
   <title>Star Data - Chandra</title>
   <script type="text/javascript" src="/libs/d3.v3.min.js"></script>
   <script type="text/javascript" src="/libs/topojson.js"></script>
+  <script type="text/javascript" src="/libs/spin.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
-<body>
+<body class="main-body">
 
-	<div class="title-description"><h1>Eye to the Sky - Chandra Edition</h1><p>Rotate the globe to display the viewable sky at that point.</p></div>
+	<div class="title-description">
+    <h1>Eye to the Sky - Chandra Edition</h1>
+    <p>Rotate the globe to display the Chandra sky as viewed from the target point on the Earth. Each yellow dot in the view below represents a target observed by the X-ray space telescope Chandra. You can hover over points in the sky to view more information about the object observed and observation scientific goals. <br /><br />Clicking on a target will change the cycle view bubble chart in the right area. If you hover over a bubble in the right area, more detailed information will be shown about that object. The bubble chart shows every proposal approved for observation each year in Chandra's 15 year lifetime. </p>
+  </div>
   <div id="vis"></div>
-    <div id="tooltip" class="hidden">
-      <div id = "tooltip-text">
-        <p>Target: <span id="tooltip-target"></span></p>
-        <p>Proposal Number: <span id="tooltip-prop-num"></span></p>
-        <p>PI: <span id="tooltip-pi"></span></p>
-        <p>Subject Category: <span id="tooltip-category"></span></p>
-        <p>Time: <span id="tooltip-time"></span></p>
-        <p>Abstract: <span id="tooltip-abstract"></span></p>
-      </div>
+  <div id="tooltip" class="hidden">
+    <div id = "tooltip-text">
+      <p>Target: <span id="tooltip-target"></span></p>
+      <p>Proposal Number: <span id="tooltip-prop-num"></span></p>
+      <p>PI: <span id="tooltip-pi"></span></p>
+      <p>Subject Category: <span id="tooltip-category"></span></p>
+      <p>Time: <span id="tooltip-time"></span></p>
+      <p>Abstract: <span id="tooltip-abstract"></span></p>
     </div>
+  </div>
+  <div id="video"><iframe src="//player.vimeo.com/video/93531642" width="400" height="200" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>
   <script src="/js/script.js"></script>
 </body>
 </html>
